@@ -14,45 +14,27 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* Animação de gradiente para o fundo */
         @keyframes animated-gradient {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-
         body {
             font-family: 'Inter', sans-serif;
             color: #1D1D1F;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            /* Fundo gradiente animado */
             background: linear-gradient(-45deg, #f0f0f0, #e0e0e0, #d0d0d0, #f5f5f7);
             background-size: 400% 400%;
             animation: animated-gradient 20s ease infinite;
-            padding-top: 80px; /* Adiciona espaço para o header fixo */
+            padding-top: 80px;
         }
-
-        /* Animação de entrada para os elementos */
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
-        
-        /* Classe para aplicar a animação */
-        .animate-on-load {
-            opacity: 0;
-            animation: fadeInUp 0.8s ease-out forwards;
-        }
-
-        /* Atrasos para escalonar a animação */
+        .animate-on-load { opacity: 0; animation: fadeInUp 0.8s ease-out forwards; }
         .delay-200 { animation-delay: 0.2s; }
         .delay-400 { animation-delay: 0.4s; }
         .delay-600 { animation-delay: 0.6s; }
@@ -69,18 +51,13 @@
             padding: 15px 30px;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            z-index: 1000;
+            z-index: 1100; /* Acima do overlay do carrinho */
             opacity: 0;
             transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
             transform: translateY(-20px) translateX(-50%);
         }
-        .message-box.error {
-            background-color: #ef4444; /* Red */
-        }
-        .message-box.show {
-            opacity: 1;
-            transform: translateY(0) translateX(-50%);
-        }
+        .message-box.error { background-color: #ef4444; } /* Red */
+        .message-box.show { opacity: 1; transform: translateY(0) translateX(-50%); }
     </style>
 </head>
 <body class="antialiased">
@@ -93,22 +70,21 @@
         </div>
 
         <div id="product-detail-container" class="hidden bg-white/50 backdrop-blur-xl rounded-3xl shadow-2xl p-6 md:p-10 lg:grid lg:grid-cols-2 lg:gap-12 border border-white/30">
-            <!-- Product Image Section -->
+            <!-- Seção da Imagem do Produto -->
             <div class="lg:col-span-1 flex flex-col items-center animate-on-load delay-200">
                 <div class="w-full max-w-lg aspect-[4/5] bg-gray-100/50 rounded-2xl overflow-hidden shadow-lg">
                     <img id="productImage" src="https://placehold.co/600x750/f5f5f7/1d1d1f?text=Carregando..." alt="Imagem do Produto" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
                 </div>
             </div>
 
-            <!-- Product Details Section -->
+            <!-- Seção de Detalhes do Produto -->
             <div class="lg:col-span-1 mt-8 lg:mt-0 flex flex-col">
                 <p id="productBrand" class="text-sm text-gray-500 font-medium uppercase tracking-wider mb-2 animate-on-load delay-400"></p>
                 <h1 id="productName" class="text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4 leading-tight animate-on-load delay-600"></h1>
                 
-                <!-- Price container that will be populated by JS -->
-                <div id="productPriceContainer" class="mb-8 animate-on-load delay-800"></div>
+                <div id="productPriceContainer" class="mb-6 animate-on-load delay-800"></div>
                 
-                <div class="space-y-5 mb-10 text-lg animate-on-load delay-1000">
+                <div class="space-y-6 mb-8 text-lg animate-on-load delay-1000">
                     <div>
                         <h2 class="text-xl font-semibold text-gray-800 mb-2">Descrição:</h2>
                         <p id="productDescription" class="text-gray-700 leading-relaxed"></p>
@@ -122,17 +98,18 @@
                         <p id="productTime" class="text-gray-700"></p>
                     </div>
                     <div>
-                        <h2 class="text-xl font-semibold text-gray-800 mb-2">Tamanhos Disponíveis:</h2>
-                        <p id="productSizes" class="text-gray-700"></p>
+                        <h2 class="text-xl font-semibold text-gray-800 mb-3">Selecione o Tamanho:</h2>
+                        <div id="sizeSelector" class="flex flex-wrap gap-3">
+                            <p id="no-sizes-message" class="text-gray-500">Nenhum tamanho disponível.</p>
+                        </div>
                     </div>
                 </div>
 
-                <button id="buyButton" class="group mt-auto w-full inline-flex items-center justify-center bg-green-500 text-white font-bold py-4 px-8 rounded-full focus:outline-none focus:ring-4 focus:ring-green-300 focus:ring-opacity-75 uppercase tracking-wider text-xl transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-green-500/40 hover:bg-green-600 transform hover:-translate-y-1">
-                    Comprar no WhatsApp
-                    <svg class="w-6 h-6 ml-3 transition-transform duration-300 group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                    </svg>
-                </button>
+                <div class="mt-auto pt-4">
+                    <button id="addToCartButton" class="w-full bg-gray-900 text-white font-bold py-4 px-8 rounded-full focus:outline-none focus:ring-4 focus:ring-gray-400 focus:ring-opacity-75 uppercase tracking-wider text-lg transition-all duration-300 shadow-lg hover:shadow-2xl hover:bg-gray-700 transform hover:-translate-y-1 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:shadow-none disabled:transform-none">
+                        Adicionar ao Carrinho
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -158,7 +135,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
     <script>
-        // Configuração do Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyBk1cV2SQEhEToTdDxqDBTYOHjyogHaOAE",
             authDomain: "bbz-imports.firebaseapp.com",
@@ -172,37 +148,36 @@
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // DOM Elements
+        // Elementos do DOM
         const loadingMessage = document.getElementById('loading-message');
         const productDetailContainer = document.getElementById('product-detail-container');
         const notFoundMessage = document.getElementById('not-found-message');
         const productImage = document.getElementById('productImage');
         const productBrand = document.getElementById('productBrand');
         const productName = document.getElementById('productName');
-        const productPriceContainer = document.getElementById('productPriceContainer'); // Updated price container
+        const productPriceContainer = document.getElementById('productPriceContainer');
         const productDescription = document.getElementById('productDescription');
         const productModelo = document.getElementById('productModelo');
         const productTimeContainer = document.getElementById('productTimeContainer');
         const productTime = document.getElementById('productTime');
-        const productSizes = document.getElementById('productSizes');
-        const buyButton = document.getElementById('buyButton');
         const productDetailPageTitle = document.getElementById('productDetailPageTitle');
         const messageBox = document.getElementById('messageBox');
+        const sizeSelector = document.getElementById('sizeSelector');
+        const noSizesMessage = document.getElementById('no-sizes-message');
+        const addToCartButton = document.getElementById('addToCartButton');
+        
+        let selectedSize = null;
+        let currentProduct = null;
 
         function showMessage(message, isError = false) {
             messageBox.textContent = message;
-            messageBox.className = 'message-box'; // Reset classes
-            if (isError) {
-                messageBox.classList.add('error');
-            }
+            messageBox.className = 'message-box';
+            if (isError) messageBox.classList.add('error');
             messageBox.classList.add('show');
-            setTimeout(() => {
-                messageBox.classList.remove('show');
-            }, 3000);
+            setTimeout(() => messageBox.classList.remove('show'), 3000);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Fetch product details
             const urlParams = new URLSearchParams(window.location.search);
             const productId = urlParams.get('id');
 
@@ -210,11 +185,11 @@
                 database.ref('roupas/' + productId).once('value', (snapshot) => {
                     const product = snapshot.val();
                     if (product) {
+                        currentProduct = { id: productId, ...product };
                         loadingMessage.style.display = 'none';
                         productDetailContainer.classList.remove('hidden');
                         productDetailPageTitle.textContent = `${product.nome} - BBZ IMPORTS`;
 
-                        // Otimização de Imagem Cloudinary para a página de detalhes (maior qualidade)
                         const originalUrl = product.imageUrl1 || 'https://placehold.co/600x750/f5f5f7/1d1d1f?text=Sem+Imagem';
                         const optimizedUrl = originalUrl.includes('cloudinary')
                             ? originalUrl.replace('/upload/', '/upload/w_800,h_1000,c_fill,q_auto,f_auto/')
@@ -225,21 +200,14 @@
                         productBrand.textContent = product.marca || 'N/A';
                         productName.textContent = product.nome;
                         
-                        // Lógica para exibição de preço
                         if (product.emPromocao && product.precoPromocional) {
                             const originalPrice = parseFloat(product.preco || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                             const promotionalPrice = parseFloat(product.precoPromocional || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
                             productPriceContainer.innerHTML = `
                                 <div class="flex items-baseline gap-3">
                                     <p class="text-2xl text-gray-500 line-through">${originalPrice}</p>
                                     <p class="text-4xl lg:text-5xl font-black text-red-600">${promotionalPrice}</p>
-                                </div>
-                                <div class="mt-2 inline-flex items-center bg-red-100 text-red-600 text-sm font-bold px-3 py-1 rounded-full">
-                                    <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg>
-                                    OFERTA ESPECIAL
-                                </div>
-                            `;
+                                </div>`;
                         } else {
                             const price = parseFloat(product.preco || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                             productPriceContainer.innerHTML = `<p class="text-3xl lg:text-4xl font-black text-gray-800">${price}</p>`;
@@ -251,34 +219,71 @@
                         if (product.modelo === 'Camisa de time' && product.time) {
                             productTimeContainer.classList.remove('hidden');
                             productTime.textContent = product.time;
-                        } else {
-                            productTimeContainer.classList.add('hidden');
                         }
 
-                        productSizes.textContent = product.tamanhos && product.tamanhos.length > 0 ? product.tamanhos.join(', ') : 'N/A';
-
-                        buyButton.addEventListener('click', () => {
-                            const phoneNumber = '558588741900'; // Seu número de WhatsApp
-                            const message = encodeURIComponent(`Olá! Tenho interesse no produto: ${product.nome}.`);
-                            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`; 
-                            window.open(whatsappUrl, '_blank');
-                        });
+                        // Popula os tamanhos
+                        sizeSelector.innerHTML = '';
+                        if (product.tamanhos && product.tamanhos.length > 0) {
+                            noSizesMessage.style.display = 'none';
+                            product.tamanhos.forEach(size => {
+                                const sizeButton = document.createElement('button');
+                                sizeButton.textContent = size;
+                                sizeButton.dataset.size = size;
+                                sizeButton.className = 'size-btn border-2 border-gray-300 text-gray-700 font-semibold w-14 h-14 rounded-full transition-colors duration-200 hover:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-400';
+                                sizeSelector.appendChild(sizeButton);
+                            });
+                        } else {
+                            noSizesMessage.style.display = 'block';
+                            addToCartButton.disabled = true;
+                        }
 
                     } else {
                         loadingMessage.style.display = 'none';
                         notFoundMessage.classList.remove('hidden');
-                        showMessage('Produto não encontrado.', true);
                     }
-                }, (error) => {
-                    console.error("Erro ao carregar detalhes do produto:", error);
-                    loadingMessage.style.display = 'none';
-                    notFoundMessage.classList.remove('hidden');
-                    showMessage('Erro ao carregar detalhes do produto. Tente novamente.', true);
                 });
             } else {
                 loadingMessage.style.display = 'none';
                 notFoundMessage.classList.remove('hidden');
-                showMessage('ID do produto não fornecido na URL.', true);
+            }
+        });
+
+        // Lógica de seleção de tamanho
+        sizeSelector.addEventListener('click', (e) => {
+            if (e.target.classList.contains('size-btn')) {
+                const currentSelected = sizeSelector.querySelector('.bg-gray-900');
+                if (currentSelected) {
+                    currentSelected.classList.remove('bg-gray-900', 'text-white', 'border-gray-900');
+                }
+                e.target.classList.add('bg-gray-900', 'text-white', 'border-gray-900');
+                selectedSize = e.target.dataset.size;
+            }
+        });
+
+        // Lógica do botão Adicionar ao Carrinho
+        addToCartButton.addEventListener('click', () => {
+            if (!currentProduct) {
+                showMessage('Erro ao carregar o produto.', true);
+                return;
+            }
+            if (!selectedSize) {
+                showMessage('Por favor, selecione um tamanho.', true);
+                return;
+            }
+
+            const productToAdd = {
+                id: currentProduct.id,
+                name: currentProduct.nome,
+                price: currentProduct.emPromocao ? currentProduct.precoPromocional : currentProduct.preco,
+                image: currentProduct.imageUrl1,
+                size: selectedSize
+            };
+            
+            if (window.addToCart) {
+                window.addToCart(productToAdd);
+                // A mensagem de sucesso agora é mostrada pelo Header.js ao abrir o carrinho
+            } else {
+                showMessage('Ocorreu um erro. Tente recarregar a página.', true);
             }
         });
     </script>
