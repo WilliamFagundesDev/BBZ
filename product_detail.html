@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="productDetailPageTitle">Detalhes do Produto - BBZ IMPORTS</title>
+    <link rel="icon" href="./imgs/icon.png" type="image/png">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* Animação de gradiente para o fundo */
+        @keyframes animated-gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #1D1D1F;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            /* Fundo gradiente animado */
+            background: linear-gradient(-45deg, #f0f0f0, #e0e0e0, #d0d0d0, #f5f5f7);
+            background-size: 400% 400%;
+            animation: animated-gradient 20s ease infinite;
+            padding-top: 80px; /* Adiciona espaço para o header fixo */
+        }
+
+        /* Animação de entrada para os elementos */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        /* Classe para aplicar a animação */
+        .animate-on-load {
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        /* Atrasos para escalonar a animação */
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-600 { animation-delay: 0.6s; }
+        .delay-800 { animation-delay: 0.8s; }
+        .delay-1000 { animation-delay: 1.0s; }
+
+        .message-box {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #22c55e; /* Green */
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            transform: translateY(-20px) translateX(-50%);
+        }
+        .message-box.error {
+            background-color: #ef4444; /* Red */
+        }
+        .message-box.show {
+            opacity: 1;
+            transform: translateY(0) translateX(-50%);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div id="messageBox" class="message-box"></div>
+    <!-- Header -->
+    <header id="header" class="bg-white/80 backdrop-blur-lg fixed top-0 left-0 right-0 z-40 shadow-sm">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex-shrink-0">
+                    <a href="index.html" class="text-3xl font-black tracking-tighter text-gray-900">BBZ</a>
+                </div>
+                <div class="hidden lg:flex lg:items-center lg:space-x-8">
+                    <a href="index.html#products-container" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Roupas</a>
+                    <a href="promocao.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Promoções</a>
+                    <a href="bbz_sports.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">BBZ Sports</a>
+                    <a href="contato.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Contato</a>
+                    <a href="quem_somos.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Quem Somos</a>
+                    <a href="marcas.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Marcas</a>
+                    <a href="login.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Admin</a>
+                </div>
+                <div class="flex items-center lg:hidden">
+                    <button id="mobile-menu-button" class="p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-gray-500">
+                        <span class="sr-only">Abrir menu</span>
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="lg:hidden hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white/95 backdrop-blur-lg rounded-b-lg shadow-lg">
+                <a href="index.html#products-container" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Roupas</a>
+                <a href="promocao.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Promoções</a>
+                <a href="bbz_sports.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">BBZ Sports</a>
+                <a href="contato.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Contato</a>
+                <a href="quem_somos.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Quem Somos</a>
+                <a href="marcas.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Marcas</a>
+                <a href="login.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Admin</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <div id="loading-message" class="text-center py-10">
+            <p class="text-lg text-gray-500">Carregando detalhes do produto...</p>
+        </div>
+
+        <div id="product-detail-container" class="hidden bg-white/50 backdrop-blur-xl rounded-3xl shadow-2xl p-6 md:p-10 lg:grid lg:grid-cols-2 lg:gap-12 border border-white/30">
+            <!-- Product Image Section -->
+            <div class="lg:col-span-1 flex flex-col items-center animate-on-load delay-200">
+                <div class="w-full max-w-lg aspect-[4/5] bg-gray-100/50 rounded-2xl overflow-hidden shadow-lg">
+                    <img id="productImage" src="https://placehold.co/600x750/f5f5f7/1d1d1f?text=Carregando..." alt="Imagem do Produto" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                </div>
+            </div>
+
+            <!-- Product Details Section -->
+            <div class="lg:col-span-1 mt-8 lg:mt-0 flex flex-col">
+                <p id="productBrand" class="text-sm text-gray-500 font-medium uppercase tracking-wider mb-2 animate-on-load delay-400"></p>
+                <h1 id="productName" class="text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4 leading-tight animate-on-load delay-600"></h1>
+                
+                <!-- Price container that will be populated by JS -->
+                <div id="productPriceContainer" class="mb-8 animate-on-load delay-800"></div>
+                
+                <div class="space-y-5 mb-10 text-lg animate-on-load delay-1000">
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-800 mb-2">Descrição:</h2>
+                        <p id="productDescription" class="text-gray-700 leading-relaxed"></p>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-800 mb-2">Modelo:</h2>
+                        <p id="productModelo" class="text-gray-700"></p>
+                    </div>
+                    <div id="productTimeContainer" class="hidden">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-2">Time:</h2>
+                        <p id="productTime" class="text-gray-700"></p>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-800 mb-2">Tamanhos Disponíveis:</h2>
+                        <p id="productSizes" class="text-gray-700"></p>
+                    </div>
+                </div>
+
+                <button id="buyButton" class="group mt-auto w-full inline-flex items-center justify-center bg-green-500 text-white font-bold py-4 px-8 rounded-full focus:outline-none focus:ring-4 focus:ring-green-300 focus:ring-opacity-75 uppercase tracking-wider text-xl transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-green-500/40 hover:bg-green-600 transform hover:-translate-y-1">
+                    Comprar no WhatsApp
+                    <svg class="w-6 h-6 ml-3 transition-transform duration-300 group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div id="not-found-message" class="hidden text-center py-20">
+            <p class="text-2xl text-gray-600">Produto não encontrado.</p>
+            <a href="index.html" class="mt-6 inline-block text-indigo-600 hover:text-indigo-800 font-semibold">Voltar para a Loja</a>
+        </div>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="bg-black/80 text-gray-300 backdrop-blur-lg mt-16">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 text-center">
+            <div class="mb-6">
+                <a href="index.html" class="text-3xl font-black tracking-tighter text-white">BBZ</a>
+            </div>
+            <p>&copy; 2025 BBZ IMPORTS. Todos os direitos reservados.</p>
+            <p class="text-sm mt-2 text-gray-400">Design inspirado para performance e estilo.</p>
+        </div>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+    <script>
+        // Configuração do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBk1cV2SQEhEToTdDxqDBTYOHjyogHaOAE",
+            authDomain: "bbz-imports.firebaseapp.com",
+            databaseURL: "https://bbz-imports-default-rtdb.firebaseio.com",
+            projectId: "bbz-imports",
+            storageBucket: "bbz-imports.appspot.com",
+            messagingSenderId: "184315339952",
+            appId: "1:184315339952:web:d8bab53b3a7fae2e6e4775",
+            measurementId: "G-QBNJP7HHQB"
+        };
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // DOM Elements
+        const loadingMessage = document.getElementById('loading-message');
+        const productDetailContainer = document.getElementById('product-detail-container');
+        const notFoundMessage = document.getElementById('not-found-message');
+        const productImage = document.getElementById('productImage');
+        const productBrand = document.getElementById('productBrand');
+        const productName = document.getElementById('productName');
+        const productPriceContainer = document.getElementById('productPriceContainer'); // Updated price container
+        const productDescription = document.getElementById('productDescription');
+        const productModelo = document.getElementById('productModelo');
+        const productTimeContainer = document.getElementById('productTimeContainer');
+        const productTime = document.getElementById('productTime');
+        const productSizes = document.getElementById('productSizes');
+        const buyButton = document.getElementById('buyButton');
+        const productDetailPageTitle = document.getElementById('productDetailPageTitle');
+        const messageBox = document.getElementById('messageBox');
+
+        function showMessage(message, isError = false) {
+            messageBox.textContent = message;
+            messageBox.className = 'message-box'; // Reset classes
+            if (isError) {
+                messageBox.classList.add('error');
+            }
+            messageBox.classList.add('show');
+            setTimeout(() => {
+                messageBox.classList.remove('show');
+            }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile menu script
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // Fetch product details
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+
+            if (productId) {
+                database.ref('roupas/' + productId).once('value', (snapshot) => {
+                    const product = snapshot.val();
+                    if (product) {
+                        loadingMessage.style.display = 'none';
+                        productDetailContainer.classList.remove('hidden');
+                        productDetailPageTitle.textContent = `${product.nome} - BBZ IMPORTS`;
+
+                        productImage.src = product.imageUrl1 || 'https://placehold.co/600x750/f5f5f7/1d1d1f?text=Sem+Imagem';
+                        productImage.alt = product.nome;
+                        productBrand.textContent = product.marca || 'N/A';
+                        productName.textContent = product.nome;
+                        
+                        // *** NEW LOGIC FOR PRICE DISPLAY ***
+                        if (product.emPromocao && product.precoPromocional) {
+                            // Product is on sale
+                            const originalPrice = parseFloat(product.preco || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                            const promotionalPrice = parseFloat(product.precoPromocional || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+                            productPriceContainer.innerHTML = `
+                                <div class="flex items-baseline gap-3">
+                                    <p class="text-2xl text-gray-500 line-through">${originalPrice}</p>
+                                    <p class="text-4xl lg:text-5xl font-black text-red-600">${promotionalPrice}</p>
+                                </div>
+                                <div class="mt-2 inline-flex items-center bg-red-100 text-red-600 text-sm font-bold px-3 py-1 rounded-full">
+                                    <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg>
+                                    OFERTA ESPECIAL
+                                </div>
+                            `;
+                        } else {
+                            // Product is not on sale
+                            const price = parseFloat(product.preco || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                            productPriceContainer.innerHTML = `<p class="text-3xl lg:text-4xl font-black text-gray-800">${price}</p>`;
+                        }
+                        
+                        productDescription.textContent = product.descricao || 'Sem descrição.';
+                        productModelo.textContent = product.modelo || 'N/A';
+                        
+                        if (product.modelo === 'Camisa de time' && product.time) {
+                            productTimeContainer.classList.remove('hidden');
+                            productTime.textContent = product.time;
+                        } else {
+                            productTimeContainer.classList.add('hidden');
+                        }
+
+                        productSizes.textContent = product.tamanhos && product.tamanhos.length > 0 ? product.tamanhos.join(', ') : 'N/A';
+
+                        buyButton.addEventListener('click', () => {
+                            const phoneNumber = '558588741900'; // Seu número de WhatsApp
+                            const message = encodeURIComponent(`Olá! Tenho interesse no produto: ${product.nome}.`);
+                            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`; 
+                            window.open(whatsappUrl, '_blank');
+                        });
+
+                    } else {
+                        loadingMessage.style.display = 'none';
+                        notFoundMessage.classList.remove('hidden');
+                        showMessage('Produto não encontrado.', true);
+                    }
+                }, (error) => {
+                    console.error("Erro ao carregar detalhes do produto:", error);
+                    loadingMessage.style.display = 'none';
+                    notFoundMessage.classList.remove('hidden');
+                    showMessage('Erro ao carregar detalhes do produto. Tente novamente.', true);
+                });
+            } else {
+                loadingMessage.style.display = 'none';
+                notFoundMessage.classList.remove('hidden');
+                showMessage('ID do produto não fornecido na URL.', true);
+            }
+        });
+    </script>
+</body>
+</html>

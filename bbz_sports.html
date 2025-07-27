@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBZ Sports - A Paixão do Torcedor</title>
+    <link rel="icon" href="./imgs/icon.png" type="image/png">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* Estilo modificado do site */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-image: url('./imgs/grama.png'); /* Fundo de grama */
+            background-size: cover; /* Repetir a imagem para preencher tudo */
+            background-attachment: fixed; /* Mantém o fundo fixo ao rolar */
+            color: #1D1D1F;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+        /* Efeito de hover nos cards de produto */
+        .product-card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transform: translateY(0) scale(1);
+            background-color: #ffffff; /* Mantém o fundo do card branco para legibilidade */
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Estilo para os botões de filtro de time */
+        .team-filter-button {
+            transition: all 0.2s ease-in-out;
+            border: 2px solid transparent;
+            background-color: rgba(255, 255, 255, 0.6); /* Fundo semi-transparente */
+        }
+        .team-filter-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        .team-filter-button.active {
+            border-color: #0026ff; /* Verde para o filtro ativo */
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 26, 255, 0.5);
+            background-color: white;
+        }
+
+        /* Título principal com sombra para melhor leitura */
+        .main-title {
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+        }
+    </style>
+</head>
+
+<body class="antialiased flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header id="header" class="bg-white/70 backdrop-blur-lg fixed top-0 left-0 right-0 z-40 shadow-sm">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex-shrink-0">
+                    <a href="index.html" class="text-3xl font-black tracking-tighter text-gray-900">BBZ</a>
+                    <a href="index.html" class="text-3x2 font-black tracking-tighter text-gray-900">Sports</a>
+                </div>
+                <div class="hidden lg:flex lg:items-center lg:space-x-8">
+                    <a href="index.html#products-container" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Roupas</a>
+                    <a href="promocao.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Promoções</a>
+                    <a href="bbz_sports.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">BBZ Sports</a>
+                    <a href="contato.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Contato</a>
+                    <a href="quem_somos.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Quem Somos</a>
+                    <a href="marcas.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Marcas</a>
+                    <a href="login.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Admin</a>
+                </div>
+                <div class="flex items-center lg:hidden">
+                    <button id="mobile-menu-button" class="p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-gray-500">
+                        <span class="sr-only">Abrir menu</span>
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="lg:hidden hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white/90 backdrop-blur-lg rounded-b-lg shadow-lg">
+                <a href="index.html#products-container" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Roupas</a>
+                <a href="promocao.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Promoções</a>
+                <a href="bbz_sports.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">BBZ Sports</a>
+                <a href="contato.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Contato</a>
+                <a href="quem_somos.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Quem Somos</a>
+                <a href="marcas.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Marcas</a>
+                <a href="login.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Admin</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-20 flex-grow backdrop-blur-sm">
+        <!-- Container com efeito de vidro -->
+        <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8 rounded-xl">
+            <!-- Filtros por Time -->
+            <section id="filters" class="mb-12">
+                <h2 class="text-3xl font-bold text-center mb-6 main-title">Filtre por Time</h2>
+                <div id="team-filters-container" class="flex justify-center items-center gap-4 flex-wrap">
+                    <!-- Botões de filtro serão inseridos aqui -->
+                </div>
+            </section>
+
+            <!-- Seção da Coleção -->
+            <section id="collection">
+                <div id="loading-message" class="text-center py-10">
+                    <p class="text-lg text-white/80">Carregando camisas...</p>
+                </div>
+                <div id="no-products-message" class="hidden text-center py-10">
+                    <p class="text-lg text-white/80">Nenhuma camisa encontrada para o time selecionado.</p>
+                </div>
+                <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10"></div>
+                <div id="pagination-controls" class="flex justify-center items-center mt-10 space-x-4 hidden"></div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black/80 text-gray-300 backdrop-blur-lg">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 text-center">
+            <div class="mb-6">
+                <a href="index.html" class="text-3xl font-black tracking-tighter text-white">BBZ</a>
+            </div>
+            <p>&copy; 2025 BBZ IMPORTS. Todos os direitos reservados.</p>
+            <p class="text-sm mt-2">Design inspirado para performance e estilo.</p>
+        </div>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+    <script>
+        // --- Firebase Configuration ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBk1cV2SQEhEToTdDxqDBTYOHjyogHaOAE",
+            authDomain: "bbz-imports.firebaseapp.com",
+            databaseURL: "https://bbz-imports-default-rtdb.firebaseio.com",
+            projectId: "bbz-imports",
+            storageBucket: "bbz-imports.appspot.com",
+            messagingSenderId: "184315339952",
+            appId: "1:184315339952:web:d8bab53b3a7fae2e6e4775",
+            measurementId: "G-QBNJP7HHQB"
+        };
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // --- DOM Elements ---
+        const productsContainer = document.getElementById('products-container');
+        const loadingMessage = document.getElementById('loading-message');
+        const noProductsMessage = document.getElementById('no-products-message');
+        const paginationControls = document.getElementById('pagination-controls');
+        const teamFiltersContainer = document.getElementById('team-filters-container');
+
+        // --- State ---
+        let allTeamShirts = [];
+        let filteredProducts = [];
+        let selectedTeam = 'All';
+        let currentPage = 1;
+        const itemsPerPage = 12;
+
+        // --- UI Interaction Logic ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        });
+
+        // --- Data Fetching and Display ---
+        function displayProducts(products) {
+            productsContainer.innerHTML = '';
+            if (products.length > 0) {
+                loadingMessage.style.display = 'none';
+                noProductsMessage.style.display = 'none';
+                productsContainer.style.display = 'grid';
+
+                products.forEach(product => {
+                    const price = parseFloat(product.preco || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                    const card = document.createElement('div');
+                    card.className = 'product-card group cursor-pointer rounded-lg overflow-hidden';
+                    card.setAttribute('data-product-id', product.id);
+                    card.innerHTML = `
+                        <div class="relative w-full aspect-[4/5] bg-gray-200">
+                            <img src="${product.imageUrl1 || 'https://placehold.co/400x500/f5f5f7/1d1d1f?text=BBZ'}" alt="${product.nome}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-4">
+                            <p class="text-sm text-gray-500">${product.time || 'Sports'}</p>
+                            <h3 class="text-md font-bold text-gray-900 truncate">${product.nome}</h3>
+                            <p class="mt-1 text-lg font-semibold text-gray-800">${price}</p>
+                        </div>
+                    `;
+                    productsContainer.appendChild(card);
+                    card.addEventListener('click', () => {
+                        window.location.href = `product_detail.html?id=${product.id}`;
+                    });
+                });
+            } else {
+                loadingMessage.style.display = 'none';
+                noProductsMessage.style.display = 'block';
+                productsContainer.style.display = 'none';
+            }
+        }
+
+        function filterAndPaginate() {
+            if (selectedTeam === 'All') {
+                filteredProducts = [...allTeamShirts];
+            } else {
+                filteredProducts = allTeamShirts.filter(p => p.time === selectedTeam);
+            }
+
+            const totalItems = filteredProducts.length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            
+            if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
+            else if (totalPages === 0) currentPage = 0;
+            else if (currentPage === 0 && totalItems > 0) currentPage = 1;
+
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+
+            displayProducts(paginatedProducts);
+            renderPaginationControls(totalItems, totalPages);
+        }
+        
+        function createTeamFilterButtons(products) {
+            const teams = new Map();
+            products.forEach(p => {
+                if (p.time && !teams.has(p.time)) {
+                    // Usando a primeira imagem do produto como logo do time
+                    teams.set(p.time, p.imageUrl1 || `https://placehold.co/80x80/eee/333?text=${p.time.substring(0,3)}`);
+                }
+            });
+
+            teamFiltersContainer.innerHTML = ''; // Limpa filtros existentes
+
+            // Botão "Todos"
+            const allButton = document.createElement('button');
+            allButton.className = 'team-filter-button active flex-shrink-0 flex items-center justify-center w-20 h-20 bg-white rounded-full shadow-md font-bold text-lg';
+            allButton.textContent = 'Todos';
+            allButton.dataset.team = 'All';
+            teamFiltersContainer.appendChild(allButton);
+
+            // Botões de times
+            teams.forEach((logoUrl, teamName) => {
+                const teamButton = document.createElement('button');
+                teamButton.className = 'team-filter-button flex-shrink-0 w-20 h-20 bg-white rounded-full shadow-md overflow-hidden';
+                teamButton.dataset.team = teamName;
+                teamButton.innerHTML = `<img src="${logoUrl}" alt="Logo ${teamName}" class="w-full h-full object-cover">`;
+                teamFiltersContainer.appendChild(teamButton);
+            });
+
+            // Adiciona event listener para a delegação de eventos
+            teamFiltersContainer.addEventListener('click', (e) => {
+                const button = e.target.closest('.team-filter-button');
+                if (!button) return;
+
+                // Atualiza estado do botão ativo
+                teamFiltersContainer.querySelector('.active').classList.remove('active');
+                button.classList.add('active');
+
+                // Filtra produtos
+                selectedTeam = button.dataset.team;
+                currentPage = 1; // Reseta a página ao mudar o filtro
+                filterAndPaginate();
+            });
+        }
+
+
+        function renderPaginationControls(totalItems, totalPages) {
+            paginationControls.innerHTML = '';
+            if (totalPages <= 1) {
+                paginationControls.classList.add('hidden');
+                return;
+            }
+            paginationControls.classList.remove('hidden');
+            
+            const prevButton = document.createElement('button');
+            prevButton.textContent = 'Anterior';
+            prevButton.className = 'px-4 py-2 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed';
+            prevButton.disabled = currentPage === 1;
+            prevButton.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    filterAndPaginate();
+                }
+            });
+            paginationControls.appendChild(prevButton);
+
+            const pageInfo = document.createElement('span');
+            pageInfo.textContent = `Página ${currentPage} de ${totalPages}`;
+            pageInfo.className = 'mx-4 text-white/90 font-medium';
+            paginationControls.appendChild(pageInfo);
+
+            const nextButton = document.createElement('button');
+            nextButton.textContent = 'Próximo';
+            nextButton.className = 'px-4 py-2 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed';
+            nextButton.disabled = currentPage === totalPages;
+            nextButton.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    filterAndPaginate();
+                }
+            });
+            paginationControls.appendChild(nextButton);
+        }
+
+        database.ref('roupas').on('value', (snapshot) => {
+            const roupas = snapshot.val();
+            let allFetchedProducts = [];
+            if (roupas) {
+                allFetchedProducts = Object.keys(roupas).map(key => ({
+                    id: key,
+                    ...roupas[key]
+                }));
+            }
+            
+            allTeamShirts = allFetchedProducts
+                .filter(p => p.modelo === 'Camisa de time')
+                .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            
+            createTeamFilterButtons(allTeamShirts);
+            filterAndPaginate();
+        }, (error) => {
+            console.error("Erro ao carregar produtos:", error);
+            loadingMessage.textContent = 'Falha ao carregar produtos. Tente novamente mais tarde.';
+        });
+    </script>
+</body>
+
+</html>
