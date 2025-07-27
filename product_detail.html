@@ -202,15 +202,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Mobile menu script
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            if (mobileMenuButton) {
-                mobileMenuButton.addEventListener('click', () => {
-                    mobileMenu.classList.toggle('hidden');
-                });
-            }
-
             // Fetch product details
             const urlParams = new URLSearchParams(window.location.search);
             const productId = urlParams.get('id');
@@ -223,14 +214,19 @@
                         productDetailContainer.classList.remove('hidden');
                         productDetailPageTitle.textContent = `${product.nome} - BBZ IMPORTS`;
 
-                        productImage.src = product.imageUrl1 || 'https://placehold.co/600x750/f5f5f7/1d1d1f?text=Sem+Imagem';
+                        // Otimização de Imagem Cloudinary para a página de detalhes (maior qualidade)
+                        const originalUrl = product.imageUrl1 || 'https://placehold.co/600x750/f5f5f7/1d1d1f?text=Sem+Imagem';
+                        const optimizedUrl = originalUrl.includes('cloudinary')
+                            ? originalUrl.replace('/upload/', '/upload/w_800,h_1000,c_fill,q_auto,f_auto/')
+                            : originalUrl;
+
+                        productImage.src = optimizedUrl;
                         productImage.alt = product.nome;
                         productBrand.textContent = product.marca || 'N/A';
                         productName.textContent = product.nome;
                         
-                        // *** NEW LOGIC FOR PRICE DISPLAY ***
+                        // Lógica para exibição de preço
                         if (product.emPromocao && product.precoPromocional) {
-                            // Product is on sale
                             const originalPrice = parseFloat(product.preco || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                             const promotionalPrice = parseFloat(product.precoPromocional || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
@@ -245,7 +241,6 @@
                                 </div>
                             `;
                         } else {
-                            // Product is not on sale
                             const price = parseFloat(product.preco || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                             productPriceContainer.innerHTML = `<p class="text-3xl lg:text-4xl font-black text-gray-800">${price}</p>`;
                         }

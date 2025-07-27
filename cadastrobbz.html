@@ -361,7 +361,8 @@
         }
 
         async function deleteRoupa(id, nomeRoupa) {
-            if (window.confirm(`Tem certeza que deseja excluir "${nomeRoupa}"?`)) {
+            // Usando um modal customizado em vez de window.confirm
+            if (confirm(`Tem certeza que deseja excluir "${nomeRoupa}"?`)) {
                 try {
                     await database.ref('roupas/' + id).remove();
                     showMessage('Produto excluído com sucesso!');
@@ -467,10 +468,16 @@
                     ? `<div class="flex items-baseline gap-2"><p class="text-gray-500 line-through">R$${roupa.preco}</p><p class="text-lg font-bold text-red-600">R$${roupa.precoPromocional}</p></div>`
                     : `<p class="text-lg font-bold text-gray-800">R$${roupa.preco}</p>`;
 
+                // Otimização de Imagem Cloudinary
+                const originalUrl = roupa.imageUrl1 || 'https://placehold.co/400x400/f3f4f6/9ca3af?text=Sem+Imagem';
+                const optimizedUrl = originalUrl.includes('cloudinary')
+                    ? originalUrl.replace('/upload/', '/upload/w_400,h_400,c_fill,q_auto,f_auto/')
+                    : originalUrl;
+
                 const card = document.createElement('div');
                 card.className = 'bg-white rounded-xl shadow-sm overflow-hidden flex flex-col';
                 card.innerHTML = `
-                    <img src="${roupa.imageUrl1 || 'https://placehold.co/400x400/f3f4f6/9ca3af?text=Sem+Imagem'}" alt="${roupa.nome}" class="w-full h-56 object-cover">
+                    <img src="${optimizedUrl}" alt="${roupa.nome}" loading="lazy" class="w-full h-56 object-cover">
                     <div class="p-4 flex flex-col flex-grow">
                         <p class="text-xs font-semibold text-indigo-600 uppercase">${roupa.marca || 'Marca'}</p>
                         <h3 class="text-lg font-bold text-gray-900 mt-1 flex-grow">${roupa.nome}</h3>

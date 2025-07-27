@@ -119,9 +119,12 @@
         document.addEventListener('DOMContentLoaded', () => {
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
+            // Certifique-se de que os botões existem antes de adicionar listeners
+            if(mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
         });
 
         // --- Data Fetching and Display ---
@@ -136,12 +139,18 @@
                     const price = parseFloat(product.preco || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                     const promotionalPrice = parseFloat(product.precoPromocional || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
+                    // Otimização de Imagem Cloudinary
+                    const originalUrl = product.imageUrl1 || 'https://placehold.co/400x500/f5f5f7/1d1d1f?text=BBZ';
+                    const optimizedUrl = originalUrl.includes('cloudinary') 
+                        ? originalUrl.replace('/upload/', '/upload/w_400,h_500,c_fill,q_auto,f_auto/')
+                        : originalUrl;
+
                     const card = document.createElement('div');
                     card.className = 'product-card group cursor-pointer bg-white rounded-lg overflow-hidden';
                     card.setAttribute('data-product-id', product.id);
                     card.innerHTML = `
                         <div class="relative w-full aspect-[4/5] bg-gray-200">
-                            <img src="${product.imageUrl1 || 'https://placehold.co/400x500/f5f5f7/1d1d1f?text=BBZ'}" alt="${product.nome}" class="w-full h-full object-cover">
+                            <img src="${optimizedUrl}" alt="${product.nome}" loading="lazy" class="w-full h-full object-cover">
                             <div class="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full">OFERTA</div>
                         </div>
                         <div class="p-4">
@@ -221,23 +230,21 @@
             paginationControls.appendChild(nextButton);
         }
 
-        database.ref('roupas').on('value', (snapshot) => {
+        // --- OTIMIZAÇÃO FIREBASE: Buscar apenas produtos em promoção ---
+        const promocoesRef = database.ref('roupas').orderByChild('emPromocao').equalTo(true);
+        promocoesRef.on('value', (snapshot) => {
             const roupas = snapshot.val();
-            let allFetchedProducts = [];
+            promotionProducts = []; // Limpa a lista antes de preencher
             if (roupas) {
-                allFetchedProducts = Object.keys(roupas).map(key => ({
+                promotionProducts = Object.keys(roupas).map(key => ({
                     id: key,
                     ...roupas[key]
-                }));
+                })).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)); // Ordena os mais recentes primeiro
             }
-            
-            promotionProducts = allFetchedProducts
-                .filter(p => p.emPromocao === true)
-                .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
             
             paginateAndDisplay();
         }, (error) => {
-            console.error("Erro ao carregar produtos:", error);
+            console.error("Erro ao carregar produtos em promoção:", error);
             loadingMessage.textContent = 'Falha ao carregar produtos. Tente novamente mais tarde.';
         });
     </script>

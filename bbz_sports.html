@@ -75,55 +75,7 @@
 
     <!-- Header -->
     <header id="header" class="bg-white/70 backdrop-blur-lg fixed top-0 left-0 right-0 z-40 shadow-sm">
-        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <div class="flex-shrink-0">
-                    <a href="index.html" class="text-3xl font-black tracking-tighter text-gray-900">BBZ</a>
-                    <a href="index.html" class="text-3x2 font-black tracking-tighter text-gray-900">Sports</a>
-                </div>
-                
-                <!-- Default Nav (Not logged in) -->
-                <div id="nav-default" class="hidden lg:flex lg:items-center lg:space-x-8">
-                    <a href="index.html#products-container" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Roupas</a>
-                    <a href="promocao.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Promoções</a>
-                    <a href="bbz_sports.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">BBZ Sports</a>
-                    <a href="contato.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Contato</a>
-                    <a href="quem_somos.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Quem Somos</a>
-                    <a href="marcas.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Marcas</a>
-                    <a href="login.html" class="bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-700 font-semibold tracking-wide">Login</a>
-                </div>
-
-                <!-- Logged In Nav -->
-                <div id="nav-logged-in" class="hidden lg:flex lg:items-center lg:space-x-4">
-                    <!-- Content will be injected by JS -->
-                </div>
-
-                <div class="flex items-center lg:hidden">
-                    <button id="mobile-menu-button" class="p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-gray-500">
-                        <span class="sr-only">Abrir menu</span>
-                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </nav>
-        <div id="mobile-menu" class="lg:hidden hidden">
-             <!-- Mobile Default Nav -->
-            <div id="mobile-nav-default" class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white/90 backdrop-blur-lg rounded-b-lg shadow-lg">
-                <a href="index.html#products-container" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Roupas</a>
-                <a href="promocao.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Promoções</a>
-                <a href="bbz_sports.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">BBZ Sports</a>
-                <a href="contato.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Contato</a>
-                <a href="quem_somos.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Quem Somos</a>
-                <a href="marcas.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Marcas</a>
-                <a href="login.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Login</a>
-            </div>
-             <!-- Mobile Logged In Nav -->
-            <div id="mobile-nav-logged-in" class="hidden px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white/95 backdrop-blur-lg rounded-b-lg shadow-lg">
-                 <!-- Content will be injected by JS -->
-            </div>
-        </div>
+        <!-- O conteúdo do Header é injetado pelo Header.js -->
     </header>
 
     <!-- Main Content -->
@@ -167,6 +119,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    
+    <!-- Header Unificado -->
+    <script src="Header.js" defer></script>
 
 
     <script>
@@ -185,53 +140,6 @@
         const database = firebase.database();
         const auth = firebase.auth();
 
-        // --- Auth State Change Handler ---
-        const navDefault = document.getElementById('nav-default');
-        const navLoggedIn = document.getElementById('nav-logged-in');
-        const mobileNavDefault = document.getElementById('mobile-nav-default');
-        const mobileNavLoggedIn = document.getElementById('mobile-nav-logged-in');
-
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                // User is signed in
-                navDefault.classList.add('hidden');
-                navLoggedIn.classList.remove('hidden');
-                mobileNavDefault.classList.add('hidden');
-                mobileNavLoggedIn.classList.remove('hidden');
-
-                const userEmail = user.email.length > 20 ? user.email.substring(0, 17) + '...' : user.email;
-
-                // Desktop Nav
-                navLoggedIn.innerHTML = `
-                    <span class="text-gray-700 font-semibold" title="${user.email}">Bem vindo, ${userEmail}</span>
-                    <button id="logoutBtnDesktop" class="bg-red-500 text-white px-3 py-1.5 rounded-md hover:bg-red-600 font-semibold text-sm">Sair</button>
-                `;
-
-                // Mobile Nav
-                mobileNavLoggedIn.innerHTML = `
-                    <span class="text-gray-700 block px-3 py-2 text-base font-medium" title="${user.email}">Bem vindo, ${user.email}</span>
-                    <a href="index.html#products-container" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Roupas</a>
-                    <a href="promocao.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Promoções</a>
-                    <a href="bbz_sports.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">BBZ Sports</a>
-                    <a href="contato.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Contato</a>
-                    <a href="quem_somos.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Quem Somos</a>
-                    <a href="marcas.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Marcas</a>
-                    <button id="logoutBtnMobile" class="w-full text-left text-red-600 hover:text-red-800 block px-3 py-2 rounded-md text-base font-medium">Sair</button>
-                `;
-                
-                // Add logout functionality
-                document.getElementById('logoutBtnDesktop').addEventListener('click', () => auth.signOut());
-                document.getElementById('logoutBtnMobile').addEventListener('click', () => auth.signOut());
-
-            } else {
-                // User is signed out
-                navDefault.classList.remove('hidden');
-                navLoggedIn.classList.add('hidden');
-                mobileNavDefault.classList.remove('hidden');
-                mobileNavLoggedIn.classList.add('hidden');
-            }
-        });
-
         // --- DOM Elements ---
         const productsContainer = document.getElementById('products-container');
         const loadingMessage = document.getElementById('loading-message');
@@ -246,15 +154,6 @@
         let currentPage = 1;
         const itemsPerPage = 12;
 
-        // --- UI Interaction Logic ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
-        });
-
         // --- Data Fetching and Display ---
         function displayProducts(products) {
             productsContainer.innerHTML = '';
@@ -265,12 +164,19 @@
 
                 products.forEach(product => {
                     const price = parseFloat(product.preco || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                    
+                    // Otimização de Imagem Cloudinary
+                    const originalUrl = product.imageUrl1 || 'https://placehold.co/400x500/f5f5f7/1d1d1f?text=BBZ';
+                    const optimizedUrl = originalUrl.includes('cloudinary')
+                        ? originalUrl.replace('/upload/', '/upload/w_400,h_500,c_fill,q_auto,f_auto/')
+                        : originalUrl;
+
                     const card = document.createElement('div');
                     card.className = 'product-card group cursor-pointer rounded-lg overflow-hidden';
                     card.setAttribute('data-product-id', product.id);
                     card.innerHTML = `
                         <div class="relative w-full aspect-[4/5] bg-gray-200">
-                            <img src="${product.imageUrl1 || 'https://placehold.co/400x500/f5f5f7/1d1d1f?text=BBZ'}" alt="${product.nome}" class="w-full h-full object-cover">
+                            <img src="${optimizedUrl}" alt="${product.nome}" loading="lazy" class="w-full h-full object-cover">
                         </div>
                         <div class="p-4">
                             <p class="text-sm text-gray-500">${product.time || 'Sports'}</p>
@@ -316,7 +222,12 @@
             const teams = new Map();
             products.forEach(p => {
                 if (p.time && !teams.has(p.time)) {
-                    teams.set(p.time, p.imageUrl1 || `https://placehold.co/80x80/eee/333?text=${p.time.substring(0,3)}`);
+                    // Otimização de Imagem Cloudinary para o logo do time
+                    const originalLogoUrl = p.imageUrl1 || `https://placehold.co/80x80/eee/333?text=${p.time.substring(0,3)}`;
+                    const optimizedLogoUrl = originalLogoUrl.includes('cloudinary')
+                        ? originalLogoUrl.replace('/upload/', '/upload/w_80,h_80,c_fill,q_auto,f_auto/')
+                        : originalLogoUrl;
+                    teams.set(p.time, optimizedLogoUrl);
                 }
             });
 
@@ -332,7 +243,7 @@
                 const teamButton = document.createElement('button');
                 teamButton.className = 'team-filter-button flex-shrink-0 w-20 h-20 bg-white rounded-full shadow-md overflow-hidden';
                 teamButton.dataset.team = teamName;
-                teamButton.innerHTML = `<img src="${logoUrl}" alt="Logo ${teamName}" class="w-full h-full object-cover">`;
+                teamButton.innerHTML = `<img src="${logoUrl}" alt="Logo ${teamName}" loading="lazy" class="w-full h-full object-cover">`;
                 teamFiltersContainer.appendChild(teamButton);
             });
 
@@ -388,19 +299,17 @@
             paginationControls.appendChild(nextButton);
         }
 
-        database.ref('roupas').on('value', (snapshot) => {
+        // --- OTIMIZAÇÃO FIREBASE: Buscar apenas camisas de time ---
+        const teamShirtsRef = database.ref('roupas').orderByChild('modelo').equalTo('Camisa de time');
+        teamShirtsRef.on('value', (snapshot) => {
             const roupas = snapshot.val();
-            let allFetchedProducts = [];
+            allTeamShirts = []; // Limpa a lista
             if (roupas) {
-                allFetchedProducts = Object.keys(roupas).map(key => ({
+                allTeamShirts = Object.keys(roupas).map(key => ({
                     id: key,
                     ...roupas[key]
-                }));
+                })).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
             }
-            
-            allTeamShirts = allFetchedProducts
-                .filter(p => p.modelo === 'Camisa de time')
-                .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
             
             createTeamFilterButtons(allTeamShirts);
             filterAndPaginate();

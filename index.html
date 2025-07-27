@@ -90,7 +90,7 @@
         <section class="h-screen w-full">
             <div class="swiper mySwiper h-full">
                 <div class="swiper-wrapper">
-                    <!-- Slide 1: Main Hero -->
+                    <!-- Slide 1: Main Hero (Não usar lazy load aqui) -->
                     <div class="swiper-slide flex items-center justify-center relative">
                         <img src="./imgs/bbz_banner.png" alt="Estilo Urbano" class="absolute inset-0 w-full h-full object-cover">
                         <div class="absolute inset-0 bg-black/40"></div>
@@ -107,9 +107,9 @@
                             </a>
                         </div>
                     </div>
-                    <!-- Slide 2: BBZ Sports -->
+                    <!-- Slide 2: BBZ Sports (Usar lazy load aqui) -->
                     <div class="swiper-slide flex items-center justify-center relative">
-                        <img src="./imgs/bbz_sports.png" alt="Paixão Esportiva" class="absolute inset-0 w-full h-full object-cover">
+                        <img src="./imgs/bbz_sports.png" alt="Paixão Esportiva" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
                         <div class="absolute inset-0 bg-black/40"></div>
                         <div class="text-center text-white p-4 z-10">
                             <h1 class="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter drop-shadow-lg">
@@ -251,54 +251,6 @@
         const database = firebase.database();
         const auth = firebase.auth();
 
-        // --- Auth State Change Handler ---
-        const navDefault = document.getElementById('nav-default');
-        const navLoggedIn = document.getElementById('nav-logged-in');
-        const mobileNavDefault = document.getElementById('mobile-nav-default');
-        const mobileNavLoggedIn = document.getElementById('mobile-nav-logged-in');
-
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                // User is signed in
-                navDefault.classList.add('hidden');
-                navLoggedIn.classList.remove('hidden');
-                mobileNavDefault.classList.add('hidden');
-                mobileNavLoggedIn.classList.remove('hidden');
-
-                const userEmail = user.email.length > 20 ? user.email.substring(0, 17) + '...' : user.email;
-
-                // Desktop Nav
-                navLoggedIn.innerHTML = `
-                    <span class="text-gray-700 font-semibold" title="${user.email}">Bem vindo, ${userEmail}</span>
-                    <button id="logoutBtnDesktop" class="bg-red-500 text-white px-3 py-1.5 rounded-md hover:bg-red-600 font-semibold text-sm">Sair</button>
-                `;
-
-                // Mobile Nav
-                mobileNavLoggedIn.innerHTML = `
-                    <span class="text-gray-700 block px-3 py-2 text-base font-medium" title="${user.email}">Bem vindo, ${user.email}</span>
-                    <a href="index.html#products-container" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Roupas</a>
-                    <a href="promocao.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Promoções</a>
-                    <a href="bbz_sports.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">BBZ Sports</a>
-                    <a href="contato.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Contato</a>
-                    <a href="quem_somos.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Quem Somos</a>
-                    <a href="marcas.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Marcas</a>
-                    <button id="logoutBtnMobile" class="w-full text-left text-red-600 hover:text-red-800 block px-3 py-2 rounded-md text-base font-medium">Sair</button>
-                `;
-                
-                // Add logout functionality
-                document.getElementById('logoutBtnDesktop').addEventListener('click', () => auth.signOut());
-                document.getElementById('logoutBtnMobile').addEventListener('click', () => auth.signOut());
-
-            } else {
-                // User is signed out
-                navDefault.classList.remove('hidden');
-                navLoggedIn.classList.add('hidden');
-                mobileNavDefault.classList.remove('hidden');
-                mobileNavLoggedIn.classList.add('hidden');
-            }
-        });
-
-
         // --- DOM Elements ---
         const productsContainer = document.getElementById('products-container');
         const loadingMessage = document.getElementById('loading-message');
@@ -317,12 +269,6 @@
 
         // --- UI Interaction Logic ---
         document.addEventListener('DOMContentLoaded', () => {
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
-
             const filterButton = document.getElementById('filter-button');
             const closeFilterButton = document.getElementById('close-filter-button');
             const filterSidebar = document.querySelector('.filter-sidebar');
@@ -336,7 +282,6 @@
                 anchor.addEventListener('click', function (e) {
                     if (this.hash) {
                         hideFilters();
-                        mobileMenu.classList.add('hidden');
                     }
                 });
             });
@@ -352,12 +297,19 @@
 
                 products.forEach(product => {
                     const price = parseFloat(product.preco || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                    
+                    // Otimização de Imagem Cloudinary
+                    const originalUrl = product.imageUrl1 || 'https://placehold.co/400x500/f5f5f7/1d1d1f?text=BBZ';
+                    const optimizedUrl = originalUrl.includes('cloudinary')
+                        ? originalUrl.replace('/upload/', '/upload/w_400,h_500,c_fill,q_auto,f_auto/')
+                        : originalUrl;
+
                     const card = document.createElement('div');
                     card.className = 'product-card group cursor-pointer';
                     card.setAttribute('data-product-id', product.id);
                     card.innerHTML = `
                         <div class="relative w-full aspect-[4/5] bg-gray-200 rounded-lg overflow-hidden">
-                            <img src="${product.imageUrl1 || 'https://placehold.co/400x500/f5f5f7/1d1d1f?text=BBZ'}" alt="${product.nome}" class="w-full h-full object-cover">
+                            <img src="${optimizedUrl}" alt="${product.nome}" loading="lazy" class="w-full h-full object-cover">
                         </div>
                         <div class="mt-4 text-left px-4 pb-4">
                             <p class="text-sm text-gray-500">${product.marca || 'Marca'}</p>
@@ -386,6 +338,7 @@
             if (selectedModelos.size > 0) {
                 filtered = filtered.filter(p => selectedModelos.has(p.modelo));
             }
+            // Filtra para não mostrar camisas de time e produtos em promoção na página inicial
             filtered = filtered.filter(p => p.modelo !== 'Camisa de time' && !p.emPromocao);
             
             const totalItems = filtered.length;
@@ -430,6 +383,7 @@
             const uniqueMarcas = new Set();
             const uniqueModelos = new Set();
             allProducts.forEach(p => {
+                // Popula filtros apenas com produtos que devem aparecer nesta página
                 if (!p.emPromocao && p.modelo !== 'Camisa de time') {
                     if (p.marca) uniqueMarcas.add(p.marca);
                     if (p.modelo) uniqueModelos.add(p.modelo);

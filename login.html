@@ -281,16 +281,15 @@
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 const user = userCredential.user;
                 
-                // Cria uma chave segura para o Realtime Database a partir do e-mail
-                const safeEmailKey = email.replace(/\./g, '_');
-
-                // Salva informações adicionais do usuário no nó 'clientes'
-                await database.ref('clientes/' + safeEmailKey).set({
+                // --- CORREÇÃO APLICADA AQUI ---
+                // O nó do cliente agora é salvo usando o UID (ID de Usuário Único) como chave.
+                // Isso garante que os dados sejam salvos e lidos do mesmo lugar.
+                await database.ref('clientes/' + user.uid).set({
                     nome: nome,
                     sobrenome: sobrenome,
                     telefone: telefone,
                     email: email,
-                    uid: user.uid // Armazena o UID para referência futura, se necessário
+                    uid: user.uid // Armazena o UID para referência futura
                 });
 
                 showMessage('Cadastro realizado com sucesso! Redirecionando...');
