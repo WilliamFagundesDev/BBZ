@@ -3,19 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo de Roupas - Admin</title>
+    <title>Painel Administrativo - BBZ Imports</title>
     <link rel="icon" href="./imgs/icon.png" type="image/png">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Header Unificado -->
+    <script src="Header.js" defer></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
+            background-color: #f3f4f6; /* cinza claro */
             color: #374151;
+            /* Adiciona padding-top para o conteúdo não ficar atrás do header fixo */
+            padding-top: 80px; 
         }
         .message-box {
             position: fixed;
-            top: 20px;
+            top: 100px; /* Ajustado para aparecer abaixo do header */
             left: 50%;
             transform: translateX(-50%);
             background-color: #4CAF50;
@@ -23,27 +31,26 @@
             padding: 15px 30px;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            z-index: 1000;
+            z-index: 1050; /* z-index maior que o header */
             opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-            text-align: center;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            transform: translateY(-20px) translateX(-50%);
         }
         .message-box.error { background-color: #f44336; }
-        .message-box.show { opacity: 1; }
+        .message-box.show { 
+            opacity: 1; 
+            transform: translateY(0) translateX(-50%);
+        }
         .loading-spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
+            border: 4px solid rgba(255, 255, 255, 0.3);
             border-left-color: #ffffff;
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             animation: spin 1s linear infinite;
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 8px;
         }
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            to { transform: rotate(360deg); }
         }
         .toggle-switch { position: relative; display: inline-block; width: 60px; height: 34px; }
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
@@ -52,157 +59,141 @@
         input:checked + .slider { background-color: #4f46e5; }
         input:focus + .slider { box-shadow: 0 0 1px #4f46e5; }
         input:checked + .slider:before { transform: translateX(26px); }
-        .toggle-label { transition: color .4s; }
-        .toggle-label.inactive { color: #9ca3af; }
-        /* Custom scrollbar for filters */
-        .filter-options::-webkit-scrollbar { width: 5px; }
-        .filter-options::-webkit-scrollbar-track { background: #f1f1f1; }
-        .filter-options::-webkit-scrollbar-thumb { background: #a5b4fc; border-radius: 4px; }
-        .filter-options::-webkit-scrollbar-thumb:hover { background: #818cf8; }
     </style>
 </head>
-<body class="p-4 sm:p-6 md:p-8">
+<body class="antialiased">
 
     <div id="messageBox" class="message-box"></div>
 
-    <div class="max-w-7xl mx-auto bg-white rounded-xl shadow-lg p-6 sm:p-8 md:p-10">
-        <div class="flex justify-between items-center mb-8">
-            <h1 class="text-3xl sm:text-4xl font-bold text-indigo-700">Catálogo de Roupas - Admin</h1>
-            <div class="flex items-center space-x-4">
-                <a href="index.html" class="text-indigo-600 hover:text-indigo-800 font-semibold transition duration-150 ease-in-out">Voltar para a Loja</a>
-                <button id="logoutButton" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-150 ease-in-out">
-                    Sair
-                </button>
+    <main class="p-4 sm:p-6 lg:p-8">
+        <div class="max-w-screen-xl mx-auto">
+            <!-- Cabeçalho do Painel -->
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800">Painel Administrativo</h1>
+                    <p class="text-gray-500 mt-1">Gerencie produtos e visualize clientes.</p>
+                </div>
+                <a href="clientes.html" class="bg-indigo-600 text-white font-semibold px-5 py-2.5 rounded-lg shadow-sm hover:bg-indigo-700 transition-colors duration-200 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0110 14.07a5 5 0 01-1.5-2.33A6.97 6.97 0 007 16c0 .34.024.673.07 1h5.86zM6 14a5 5 0 01-1.5-3.33A6.97 6.97 0 003 16c0 .34.024.673.07 1h2.86zM14 14a5 5 0 01-1.5-3.33A6.97 6.97 0 0011 16c0 .34.024.673.07 1h2.86z" />
+                    </svg>
+                    <span>Clientes</span>
+                </a>
             </div>
-        </div>
 
-        <!-- Seção de Cadastro/Edição de Roupas -->
-        <section class="mb-12 p-6 bg-indigo-50 rounded-lg shadow-md">
-            <h2 class="text-2xl sm:text-3xl font-semibold mb-6 text-indigo-600" id="formTitle">Cadastrar Nova Roupa</h2>
-            <form id="cadastroForm" class="space-y-4">
-                <input type="hidden" id="roupaId" value="">
-                <input type="hidden" id="publicId1" value="">
-                <div>
-                    <label for="nome" class="block text-sm font-medium text-gray-700 mb-1">Nome da Roupa:</label>
-                    <input type="text" id="nome" name="nome" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-base">
-                </div>
-                <div>
-                    <label for="marca" class="block text-sm font-medium text-gray-700 mb-1">Marca:</label>
-                    <input type="text" id="marca" name="marca" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-base">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Tamanhos:</label>
-                    <div class="flex flex-wrap gap-x-4 gap-y-2">
-                        <label class="inline-flex items-center"><input type="checkbox" name="tamanhos" value="PP" class="form-checkbox h-5 w-5 text-indigo-600 rounded"><span class="ml-2 text-gray-700">PP</span></label>
-                        <label class="inline-flex items-center"><input type="checkbox" name="tamanhos" value="P" class="form-checkbox h-5 w-5 text-indigo-600 rounded"><span class="ml-2 text-gray-700">P</span></label>
-                        <label class="inline-flex items-center"><input type="checkbox" name="tamanhos" value="M" class="form-checkbox h-5 w-5 text-indigo-600 rounded"><span class="ml-2 text-gray-700">M</span></label>
-                        <label class="inline-flex items-center"><input type="checkbox" name="tamanhos" value="G" class="form-checkbox h-5 w-5 text-indigo-600 rounded"><span class="ml-2 text-gray-700">G</span></label>
-                        <label class="inline-flex items-center"><input type="checkbox" name="tamanhos" value="GG" class="form-checkbox h-5 w-5 text-indigo-600 rounded"><span class="ml-2 text-gray-700">GG</span></label>
-                    </div>
-                </div>
-                <div>
-                    <label for="modelo" class="block text-sm font-medium text-gray-700 mb-1">Modelo:</label>
-                    <select id="modelo" name="modelo" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-base">
-                        <option value="">Selecione um Modelo</option>
-                        <option value="Bags">Bags</option>
-                        <option value="Bonés">Bonés</option>
-                        <option value="Bucket">Bucket</option>
-                        <option value="Calças Cargo">Calças Cargo</option>
-                        <option value="Camisas Polo">Camisas Polo</option>
-                        <option value="Camisas Streetwear">Camisas Streetwear</option>
-                        <option value="Moleton">Moleton</option>
-                        <option value="Short Suedine">Short Suedine</option>
-                        <option value="Camisa de time">Camisa de time</option>
-                        <option value="Kits">Kits</option>
-                    </select>
-                </div>
-                <div id="campoTimeContainer" class="hidden">
-                    <label for="time" class="block text-sm font-medium text-gray-700 mb-1">Time:</label>
-                    <input type="text" id="time" name="time" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-base">
-                </div>
-                <div>
-                    <label for="descricao" class="block text-sm font-medium text-gray-700 mb-1">Descrição:</label>
-                    <textarea id="descricao" name="descricao" rows="3" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-base"></textarea>
-                </div>
-                <div>
-                    <label for="preco" class="block text-sm font-medium text-gray-700 mb-1">Preço (R$):</label>
-                    <input type="number" id="preco" name="preco" step="0.01" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-base">
-                </div>
-                <div class="flex items-center gap-4">
-                    <label id="promocaoLabel" for="promocaoToggle" class="toggle-label inactive block text-sm font-medium">Em Promoção</label>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="promocaoToggle">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div id="precoPromocionalContainer" class="hidden">
-                    <label for="precoPromocional" class="block text-sm font-medium text-gray-700 mb-1">Valor da Promoção (R$):</label>
-                    <input type="number" id="precoPromocional" name="precoPromocional" step="0.01" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-base">
-                </div>
-                <div>
-                    <label for="imageFile1" class="block text-sm font-medium text-gray-700 mb-1">Upload da Imagem:</label>
-                    <input type="file" id="imageFile1" name="imageFile1" accept="image/*" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-base">
-                    <p id="currentImage1" class="text-xs text-gray-500 mt-1"></p>
-                </div>
-                <button type="submit" id="submitButton" class="w-full sm:w-auto px-6 py-3 bg-indigo-600 text-white font-semibold rounded-md shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out flex items-center justify-center">
-                    <span id="buttonText">Cadastrar Roupa</span>
-                    <div id="loadingSpinner" class="loading-spinner hidden"></div>
-                </button>
-                <button type="button" id="cancelEditButton" class="w-full sm:w-auto px-6 py-3 bg-gray-400 text-white font-semibold rounded-md shadow-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition duration-150 ease-in-out hidden">
-                    Cancelar Edição
-                </button>
-            </form>
-        </section>
-
-        <!-- Seção do Catálogo com Filtros -->
-        <section>
-            <h2 class="text-2xl sm:text-3xl font-semibold mb-6 text-indigo-600 text-center">Nosso Catálogo</h2>
-            <div class="flex flex-col lg:flex-row gap-8">
-                <!-- Barra Lateral de Filtros -->
-                <aside class="lg:w-1/4 xl:w-1/5">
-                    <div class="space-y-6 sticky top-8">
-                        <div>
-                            <label for="search-input" class="font-bold text-lg mb-3 border-b pb-2 block">Pesquisar por Nome</label>
-                            <input type="text" id="search-input" placeholder="Digite o nome..." class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-lg mb-3 border-b pb-2">Marcas</h3>
-                            <div id="filterMarca" class="space-y-2 max-h-40 overflow-y-auto pr-2 filter-options"></div>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-lg mb-3 border-b pb-2">Modelos</h3>
-                            <div id="filterModelo" class="space-y-2 max-h-40 overflow-y-auto pr-2 filter-options"></div>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-lg mb-3 border-b pb-2">Tamanhos</h3>
-                            <div id="filterTamanho" class="space-y-2 max-h-40 overflow-y-auto pr-2 filter-options"></div>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-lg mb-3 border-b pb-2">Promoção</h3>
-                            <div id="filterPromocao" class="space-y-2">
-                                <label class="flex items-center"><input type="radio" name="promocao" value="todos" checked class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"><span class="ml-3 text-sm text-gray-600">Todos</span></label>
-                                <label class="flex items-center"><input type="radio" name="promocao" value="sim" class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"><span class="ml-3 text-sm text-gray-600">Em promoção</span></label>
-                                <label class="flex items-center"><input type="radio" name="promocao" value="nao" class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"><span class="ml-3 text-sm text-gray-600">Sem promoção</span></label>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Coluna do Formulário -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white p-6 rounded-xl shadow-md sticky top-24">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6" id="formTitle">Cadastrar Produto</h2>
+                        <form id="cadastroForm" class="space-y-5">
+                            <input type="hidden" id="roupaId">
+                            <input type="hidden" id="publicId1">
+                            <div>
+                                <label for="nome" class="block text-sm font-medium text-gray-700 mb-1">Nome</label>
+                                <input type="text" id="nome" required class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
-                        </div>
-                        <button id="clearFiltersButton" class="w-full px-4 py-2 bg-gray-600 text-white font-semibold rounded-md shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-150 ease-in-out">
-                            Limpar Filtros
-                        </button>
+                            <div>
+                                <label for="marca" class="block text-sm font-medium text-gray-700 mb-1">Marca</label>
+                                <input type="text" id="marca" required class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div>
+                                <label for="modelo" class="block text-sm font-medium text-gray-700 mb-1">Modelo</label>
+                                <select id="modelo" required class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                    <option value="">Selecione um Modelo</option>
+                                    <option value="Bags">Bags</option>
+                                    <option value="Bonés">Bonés</option>
+                                    <option value="Bucket">Bucket</option>
+                                    <option value="Calças Cargo">Calças Cargo</option>
+                                    <option value="Camisas Polo">Camisas Polo</option>
+                                    <option value="Camisas Streetwear">Camisas Streetwear</option>
+                                    <option value="Moleton">Moleton</option>
+                                    <option value="Short Suedine">Short Suedine</option>
+                                    <option value="Camisa de time">Camisa de time</option>
+                                    <option value="Kits">Kits</option>
+                                </select>
+                            </div>
+                            <div id="campoTimeContainer" class="hidden">
+                                <label for="time" class="block text-sm font-medium text-gray-700 mb-1">Time</label>
+                                <input type="text" id="time" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Tamanhos</label>
+                                <div class="flex flex-wrap gap-x-4 gap-y-2">
+                                    <label class="inline-flex items-center"><input type="checkbox" name="tamanhos" value="PP" class="form-checkbox h-5 w-5 text-indigo-600 rounded"><span class="ml-2">PP</span></label>
+                                    <label class="inline-flex items-center"><input type="checkbox" name="tamanhos" value="P" class="form-checkbox h-5 w-5 text-indigo-600 rounded"><span class="ml-2">P</span></label>
+                                    <label class="inline-flex items-center"><input type="checkbox" name="tamanhos" value="M" class="form-checkbox h-5 w-5 text-indigo-600 rounded"><span class="ml-2">M</span></label>
+                                    <label class="inline-flex items-center"><input type="checkbox" name="tamanhos" value="G" class="form-checkbox h-5 w-5 text-indigo-600 rounded"><span class="ml-2">G</span></label>
+                                    <label class="inline-flex items-center"><input type="checkbox" name="tamanhos" value="GG" class="form-checkbox h-5 w-5 text-indigo-600 rounded"><span class="ml-2">GG</span></label>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="descricao" class="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
+                                <textarea id="descricao" rows="3" required class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                            </div>
+                            <div>
+                                <label for="preco" class="block text-sm font-medium text-gray-700 mb-1">Preço (R$)</label>
+                                <input type="number" id="preco" step="0.01" required class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div class="flex items-center justify-between bg-gray-100 p-3 rounded-lg">
+                                <label for="promocaoToggle" class="font-medium text-gray-700">Em Promoção?</label>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="promocaoToggle">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div id="precoPromocionalContainer" class="hidden">
+                                <label for="precoPromocional" class="block text-sm font-medium text-gray-700 mb-1">Valor da Promoção (R$)</label>
+                                <input type="number" id="precoPromocional" step="0.01" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div>
+                                <label for="imageFile1" class="block text-sm font-medium text-gray-700 mb-1">Imagem Principal</label>
+                                <input type="file" id="imageFile1" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                                <p id="currentImage1" class="text-xs text-gray-500 mt-1"></p>
+                            </div>
+                            <div class="flex items-center gap-4 pt-4">
+                                <button type="submit" id="submitButton" class="w-full px-6 py-3 bg-indigo-600 text-white font-bold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition flex items-center justify-center gap-2">
+                                    <span id="buttonText">Cadastrar</span>
+                                    <div id="loadingSpinner" class="loading-spinner hidden"></div>
+                                </button>
+                                <button type="button" id="cancelEditButton" class="w-full px-6 py-3 bg-gray-200 text-gray-700 font-bold rounded-lg hover:bg-gray-300 hidden">
+                                    Cancelar
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                </aside>
+                </div>
 
-                <!-- Grade de Produtos -->
-                <div class="w-full lg:w-3/4 xl:w-4/5">
+                <!-- Coluna do Catálogo -->
+                <div class="lg:col-span-2">
+                    <!-- Seção de Filtros -->
+                    <div class="bg-white p-4 rounded-xl shadow-md mb-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                            <input type="text" id="filter-search" placeholder="Buscar por nome..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                            <select id="filter-marca" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="all">Todas as Marcas</option>
+                            </select>
+                            <select id="filter-modelo" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="all">Todos os Modelos</option>
+                            </select>
+                            <select id="filter-promocao" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="all">Todos</option>
+                                <option value="sim">Em Promoção</option>
+                                <option value="nao">Sem Promoção</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div id="loading-message" class="text-center py-10"><p class="text-lg text-gray-500">Carregando produtos...</p></div>
                     <div id="no-products-message" class="hidden text-center py-10"><p class="text-lg text-gray-500">Nenhum produto encontrado com os filtros selecionados.</p></div>
-                    <div id="catalogo-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- Itens do catálogo serão carregados aqui -->
+                    <div id="catalogo-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                        <!-- Cards de produtos serão inseridos aqui -->
                     </div>
                     <div id="pagination-controls" class="flex justify-center items-center mt-10 space-x-4"></div>
                 </div>
             </div>
-        </section>
-    </div>
+        </div>
+    </main>
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
@@ -243,9 +234,7 @@
         const modeloSelect = document.getElementById('modelo');
         const campoTimeContainer = document.getElementById('campoTimeContainer');
         const currentImage1 = document.getElementById('currentImage1');
-        const logoutButton = document.getElementById('logoutButton');
         const promocaoToggle = document.getElementById('promocaoToggle');
-        const promocaoLabel = document.getElementById('promocaoLabel');
         const precoPromocionalContainer = document.getElementById('precoPromocionalContainer');
         const precoPromocionalInput = document.getElementById('precoPromocional');
         const catalogoContainer = document.getElementById('catalogo-container');
@@ -254,22 +243,16 @@
         const noProductsMessage = document.getElementById('no-products-message');
         
         // --- Elementos de Filtro ---
-        const searchInput = document.getElementById('search-input');
-        const filterMarcaContainer = document.getElementById('filterMarca');
-        const filterModeloContainer = document.getElementById('filterModelo');
-        const filterTamanhoContainer = document.getElementById('filterTamanho');
-        const filterPromocaoContainer = document.getElementById('filterPromocao');
-        const clearFiltersButton = document.getElementById('clearFiltersButton');
+        const filterSearchInput = document.getElementById('filter-search');
+        const filterMarcaSelect = document.getElementById('filter-marca');
+        const filterModeloSelect = document.getElementById('filter-modelo');
+        const filterPromocaoSelect = document.getElementById('filter-promocao');
 
         // --- Estado da Aplicação ---
         let allProducts = [];
+        let filteredProducts = [];
         let currentPage = 1;
         const itemsPerPage = 9;
-        let selectedMarcas = new Set();
-        let selectedModelos = new Set();
-        let selectedTamanhos = new Set();
-        let selectedPromocao = 'todos'; // 'todos', 'sim', 'nao'
-        let searchTerm = '';
 
         // --- Funções Auxiliares ---
         function showMessage(message, isError = false) {
@@ -281,124 +264,88 @@
 
         function setLoadingState(isLoading) {
             submitButton.disabled = isLoading;
-            buttonText.textContent = isLoading ? 'Enviando...' : (roupaIdInput.value ? 'Atualizar Roupa' : 'Cadastrar Roupa');
+            buttonText.textContent = isLoading ? '' : (roupaIdInput.value ? 'Atualizar' : 'Cadastrar');
             loadingSpinner.classList.toggle('hidden', !isLoading);
         }
 
-        // --- Lógica de Promoção (Formulário) ---
+        // --- Lógica do Formulário ---
         promocaoToggle.addEventListener('change', () => {
-            const isChecked = promocaoToggle.checked;
-            precoPromocionalContainer.classList.toggle('hidden', !isChecked);
-            promocaoLabel.classList.toggle('inactive', !isChecked);
-            if (!isChecked) {
-                precoPromocionalInput.value = '';
-            }
+            precoPromocionalContainer.classList.toggle('hidden', !promocaoToggle.checked);
+            if (!promocaoToggle.checked) precoPromocionalInput.value = '';
         });
 
-        // --- Lógica do Cloudinary ---
-        async function uploadImageToCloudinary(file) {
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-            formData.append('cloud_name', CLOUDINARY_CLOUD_NAME);
-            const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
-                method: 'POST',
-                body: formData
-            });
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(`Erro no upload: ${errorData.error.message}`);
-            }
-            return response.json();
-        }
+        modeloSelect.addEventListener('change', () => {
+            campoTimeContainer.classList.toggle('hidden', modeloSelect.value !== 'Camisa de time');
+            if (modeloSelect.value !== 'Camisa de time') document.getElementById('time').value = '';
+        });
 
-        // --- Lógica do Formulário ---
         cadastroForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (!auth.currentUser) {
-                showMessage('Você precisa estar logado.', true);
-                return;
-            }
             setLoadingState(true);
-
-            const roupaId = roupaIdInput.value;
-            const imageFile1 = document.getElementById('imageFile1').files[0];
-            let imageUrl1 = currentImage1.dataset.url || '';
-            let publicId1 = publicIdInput.value || '';
-
             try {
+                // Lógica de envio do formulário (inalterada)
+                const imageFile1 = document.getElementById('imageFile1').files[0];
+                let imageUrl1 = currentImage1.dataset.url || '';
+                let publicId1 = publicIdInput.value || '';
+
                 if (imageFile1) {
-                    const cloudinaryData = await uploadImageToCloudinary(imageFile1);
+                    const formData = new FormData();
+                    formData.append('file', imageFile1);
+                    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+                    formData.append('cloud_name', CLOUDINARY_CLOUD_NAME);
+                    const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, { method: 'POST', body: formData });
+                    if (!response.ok) throw new Error('Erro no upload da imagem.');
+                    const cloudinaryData = await response.json();
                     imageUrl1 = cloudinaryData.secure_url;
                     publicId1 = cloudinaryData.public_id;
-                } else if (!roupaId) {
+                } else if (!roupaIdInput.value) {
                     throw new Error('A imagem é obrigatória para um novo cadastro.');
                 }
 
                 const emPromocao = promocaoToggle.checked;
                 const precoPromocionalValue = emPromocao ? parseFloat(precoPromocionalInput.value).toFixed(2) : null;
-
                 if (emPromocao && (!precoPromocionalValue || precoPromocionalValue <= 0)) {
-                    throw new Error('O valor promocional é obrigatório quando a promoção está ativa.');
+                    throw new Error('O valor promocional é obrigatório.');
                 }
 
                 const roupaData = {
-                    nome: document.getElementById('nome').value,
-                    marca: document.getElementById('marca').value,
-                    descricao: document.getElementById('descricao').value,
-                    preco: parseFloat(document.getElementById('preco').value).toFixed(2),
-                    modelo: modeloSelect.value,
-                    time: modeloSelect.value === 'Camisa de time' ? document.getElementById('time').value : '',
+                    nome: document.getElementById('nome').value, marca: document.getElementById('marca').value, descricao: document.getElementById('descricao').value,
+                    preco: parseFloat(document.getElementById('preco').value).toFixed(2), modelo: modeloSelect.value, time: document.getElementById('time').value,
                     tamanhos: Array.from(document.querySelectorAll('input[name="tamanhos"]:checked')).map(cb => cb.value),
-                    emPromocao: emPromocao,
-                    precoPromocional: precoPromocionalValue,
-                    imageUrl1: imageUrl1,
-                    publicId1: publicId1,
+                    emPromocao: emPromocao, precoPromocional: precoPromocionalValue, imageUrl1: imageUrl1, publicId1: publicId1,
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
                 };
 
-                const dbRef = roupaId ? database.ref('roupas/' + roupaId) : database.ref('roupas').push();
-                if (!roupaId) {
-                    roupaData.timestamp = firebase.database.ServerValue.TIMESTAMP;
-                }
-                
+                const dbRef = roupaIdInput.value ? database.ref('roupas/' + roupaIdInput.value) : database.ref('roupas').push();
                 await dbRef.set(roupaData);
-                showMessage(roupaId ? 'Roupa atualizada com sucesso!' : 'Roupa cadastrada com sucesso!');
+                
+                showMessage(roupaIdInput.value ? 'Produto atualizado!' : 'Produto cadastrado!');
                 resetForm();
-
             } catch (error) {
-                console.error("Erro:", error);
                 showMessage(error.message, true);
             } finally {
                 setLoadingState(false);
             }
         });
-        
+
         // --- Funções de Edição, Exclusão e Reset ---
         function editRoupa(id) {
-            if (!auth.currentUser) {
-                showMessage('Você precisa estar logado para editar.', true);
-                return;
-            }
             const roupa = allProducts.find(p => p.id === id);
             if (roupa) {
-                resetForm();
-                formTitle.textContent = 'Editar Roupa';
-                submitButton.querySelector('#buttonText').textContent = 'Atualizar Roupa';
+                formTitle.textContent = 'Editar Produto';
+                buttonText.textContent = 'Atualizar';
                 cancelEditButton.classList.remove('hidden');
                 
-                roupaIdInput.value = id;
-                publicIdInput.value = roupa.publicId1 || '';
+                roupaIdInput.value = id; publicIdInput.value = roupa.publicId1 || '';
                 document.getElementById('nome').value = roupa.nome || '';
                 document.getElementById('marca').value = roupa.marca || '';
                 document.getElementById('descricao').value = roupa.descricao || '';
                 document.getElementById('preco').value = roupa.preco || '';
                 modeloSelect.value = roupa.modelo || '';
-                
                 modeloSelect.dispatchEvent(new Event('change'));
-                if (roupa.modelo === 'Camisa de time') {
-                    document.getElementById('time').value = roupa.time || '';
-                }
-
+                document.getElementById('time').value = roupa.time || '';
+                
+                document.querySelectorAll('input[name="tamanhos"]').forEach(cb => cb.checked = false);
                 (roupa.tamanhos || []).forEach(tamanho => {
                     const checkbox = document.querySelector(`input[name="tamanhos"][value="${tamanho}"]`);
                     if (checkbox) checkbox.checked = true;
@@ -406,106 +353,137 @@
                 
                 promocaoToggle.checked = roupa.emPromocao || false;
                 promocaoToggle.dispatchEvent(new Event('change'));
-                if (roupa.emPromocao) {
-                    precoPromocionalInput.value = roupa.precoPromocional || '';
-                }
-
-                currentImage1.textContent = roupa.imageUrl1 ? `Imagem atual: ${roupa.imageUrl1.substring(0, 40)}...` : 'Nenhuma imagem';
+                precoPromocionalInput.value = roupa.precoPromocional || '';
+                currentImage1.textContent = roupa.imageUrl1 ? `Imagem atual carregada.` : 'Nenhuma imagem.';
                 currentImage1.dataset.url = roupa.imageUrl1 || '';
-                
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
 
-        async function deleteRoupa(id, nomeRoupa, publicId) {
-            if (!auth.currentUser) {
-                showMessage('Você precisa estar logado para excluir.', true);
-                return;
-            }
-            // Use a custom modal in a real app instead of confirm()
-            if (window.confirm(`Tem certeza que deseja excluir a roupa "${nomeRoupa}"?`)) {
+        async function deleteRoupa(id, nomeRoupa) {
+            if (window.confirm(`Tem certeza que deseja excluir "${nomeRoupa}"?`)) {
                 try {
                     await database.ref('roupas/' + id).remove();
-                    if (publicId) {
-                        console.warn(`EXCLUSÃO SEGURA NECESSÁRIA: Implemente uma função de backend para excluir a imagem com public_id '${publicId}' do Cloudinary.`);
-                    }
-                    showMessage('Roupa excluída com sucesso!');
+                    showMessage('Produto excluído com sucesso!');
                 } catch (error) {
-                    console.error("Erro ao excluir roupa:", error);
-                    showMessage('Erro ao excluir roupa.', true);
+                    showMessage('Erro ao excluir produto.', true);
                 }
             }
         }
 
         function resetForm() {
             cadastroForm.reset();
-            roupaIdInput.value = '';
-            publicIdInput.value = '';
-            formTitle.textContent = 'Cadastrar Nova Roupa';
-            submitButton.querySelector('#buttonText').textContent = 'Cadastrar Roupa';
+            roupaIdInput.value = ''; publicIdInput.value = '';
+            formTitle.textContent = 'Cadastrar Produto';
+            buttonText.textContent = 'Cadastrar';
             cancelEditButton.classList.add('hidden');
-            promocaoToggle.checked = false;
             promocaoToggle.dispatchEvent(new Event('change'));
-            currentImage1.textContent = '';
-            currentImage1.dataset.url = '';
+            currentImage1.textContent = ''; currentImage1.dataset.url = '';
             modeloSelect.dispatchEvent(new Event('change'));
         }
 
         cancelEditButton.addEventListener('click', resetForm);
-        modeloSelect.addEventListener('change', () => {
-            campoTimeContainer.classList.toggle('hidden', modeloSelect.value !== 'Camisa de time');
-            if (modeloSelect.value !== 'Camisa de time') document.getElementById('time').value = '';
-        });
 
         // --- Autenticação ---
-        logoutButton.addEventListener('click', () => auth.signOut());
         auth.onAuthStateChanged(user => {
-            if (!user) window.location.href = 'login.html';
+            if (!user || user.email !== 'bbzimports@gmail.com') {
+                window.location.href = 'login.html';
+            } else {
+                loadProducts();
+            }
         });
 
-        // --- Lógica de Filtragem e Paginação ---
+        // --- Lógica de Filtros ---
+        function populateFilters() {
+            const marcas = [...new Set(allProducts.map(p => p.marca).filter(Boolean))].sort();
+            const modelos = [...new Set(allProducts.map(p => p.modelo).filter(Boolean))].sort();
+
+            filterMarcaSelect.innerHTML = '<option value="all">Todas as Marcas</option>';
+            marcas.forEach(marca => {
+                filterMarcaSelect.innerHTML += `<option value="${marca}">${marca}</option>`;
+            });
+
+            filterModeloSelect.innerHTML = '<option value="all">Todos os Modelos</option>';
+            modelos.forEach(modelo => {
+                filterModeloSelect.innerHTML += `<option value="${modelo}">${modelo}</option>`;
+            });
+        }
+        
+        function applyFiltersAndRender() {
+            const searchTerm = filterSearchInput.value.toLowerCase();
+            const selectedMarca = filterMarcaSelect.value;
+            const selectedModelo = filterModeloSelect.value;
+            const selectedPromocao = filterPromocaoSelect.value;
+
+            filteredProducts = allProducts.filter(p => {
+                const nameMatch = !searchTerm || p.nome.toLowerCase().includes(searchTerm);
+                const marcaMatch = selectedMarca === 'all' || p.marca === selectedMarca;
+                const modeloMatch = selectedModelo === 'all' || p.modelo === selectedModelo;
+                const promocaoMatch = selectedPromocao === 'all' || (selectedPromocao === 'sim' && p.emPromocao) || (selectedPromocao === 'nao' && !p.emPromocao);
+                return nameMatch && marcaMatch && modeloMatch && promocaoMatch;
+            });
+            renderPage(1);
+        }
+
+        [filterSearchInput, filterMarcaSelect, filterModeloSelect, filterPromocaoSelect].forEach(el => {
+            el.addEventListener('input', applyFiltersAndRender);
+        });
+
+        // --- Carregamento e Renderização de Dados ---
+        function loadProducts() {
+            database.ref('roupas').orderByChild('timestamp').on('value', (snapshot) => {
+                loadingMessage.style.display = 'none';
+                allProducts = [];
+                if (snapshot.exists()) {
+                    snapshot.forEach(childSnapshot => {
+                        allProducts.unshift({ id: childSnapshot.key, ...childSnapshot.val() });
+                    });
+                }
+                populateFilters();
+                applyFiltersAndRender();
+            }, (error) => {
+                loadingMessage.textContent = 'Falha ao carregar produtos.';
+            });
+        }
+
+        function renderPage(page) {
+            currentPage = page;
+            const totalItems = filteredProducts.length;
+            noProductsMessage.style.display = totalItems === 0 ? 'block' : 'none';
+            catalogoContainer.style.display = totalItems > 0 ? 'grid' : 'none';
+
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const paginatedProducts = filteredProducts.slice(startIndex, startIndex + itemsPerPage);
+
+            renderCatalogo(paginatedProducts);
+            renderPaginationControls(totalItems, totalPages);
+        }
 
         function renderCatalogo(productsToRender) {
             catalogoContainer.innerHTML = '';
-            if (productsToRender.length === 0) {
-                noProductsMessage.style.display = 'block';
-                catalogoContainer.style.display = 'none';
-            } else {
-                noProductsMessage.style.display = 'none';
-                catalogoContainer.style.display = 'grid';
-            }
-
             productsToRender.forEach(roupa => {
-                const roupaCard = document.createElement('div');
-                roupaCard.className = 'bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:scale-105';
-                
-                let precoHtml = `<p class="text-lg font-bold text-indigo-700">R$ ${parseFloat(roupa.preco).toFixed(2)}</p>`;
-                if (roupa.emPromocao && roupa.precoPromocional) {
-                    precoHtml = `
-                        <div>
-                            <p class="text-sm text-gray-500 line-through">R$ ${parseFloat(roupa.preco).toFixed(2)}</p>
-                            <p class="text-xl font-bold text-red-600">R$ ${parseFloat(roupa.precoPromocional).toFixed(2)}</p>
-                        </div>
-                    `;
-                }
+                const precoHtml = (roupa.emPromocao && roupa.precoPromocional)
+                    ? `<div class="flex items-baseline gap-2"><p class="text-gray-500 line-through">R$${roupa.preco}</p><p class="text-lg font-bold text-red-600">R$${roupa.precoPromocional}</p></div>`
+                    : `<p class="text-lg font-bold text-gray-800">R$${roupa.preco}</p>`;
 
-                roupaCard.innerHTML = `
-                    <img src="${roupa.imageUrl1 || 'https://placehold.co/400x200/cccccc/333333?text=Sem+Imagem'}" alt="${roupa.nome}" class="w-full h-48 object-cover">
-                    <div class="p-4">
-                        <h3 class="text-xl font-semibold mb-2 text-gray-800">${roupa.nome}</h3>
-                        <p class="text-gray-600 text-sm mb-1"><strong>Marca:</strong> ${roupa.marca || 'N/A'}</p>
-                        <p class="text-gray-600 text-sm mb-1"><strong>Modelo:</strong> ${roupa.modelo || 'N/A'}</p>
-                        ${roupa.time ? `<p class="text-gray-600 text-sm mb-1"><strong>Time:</strong> ${roupa.time}</p>` : ''}
-                        <p class="text-gray-600 text-sm mb-1"><strong>Tamanhos:</strong> ${roupa.tamanhos && roupa.tamanhos.length > 0 ? roupa.tamanhos.join(', ') : 'N/A'}</p>
-                        <p class="text-gray-600 text-sm mb-3">${roupa.descricao}</p>
-                        ${precoHtml}
-                        <div class="mt-4 flex flex-col sm:flex-row gap-2">
-                            <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" onclick="editRoupa('${roupa.id}')">Editar</button>
-                            <button class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600" onclick="deleteRoupa('${roupa.id}', '${roupa.nome}', '${roupa.publicId1 || ''}')">Excluir</button>
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-xl shadow-sm overflow-hidden flex flex-col';
+                card.innerHTML = `
+                    <img src="${roupa.imageUrl1 || 'https://placehold.co/400x400/f3f4f6/9ca3af?text=Sem+Imagem'}" alt="${roupa.nome}" class="w-full h-56 object-cover">
+                    <div class="p-4 flex flex-col flex-grow">
+                        <p class="text-xs font-semibold text-indigo-600 uppercase">${roupa.marca || 'Marca'}</p>
+                        <h3 class="text-lg font-bold text-gray-900 mt-1 flex-grow">${roupa.nome}</h3>
+                        <div class="mt-2">${precoHtml}</div>
+                        <div class="mt-4 flex gap-2">
+                            <button class="w-full bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg hover:bg-gray-300" onclick="editRoupa('${roupa.id}')">Editar</button>
+                            <button class="bg-red-100 text-red-700 p-2 rounded-lg hover:bg-red-200" onclick="deleteRoupa('${roupa.id}', '${roupa.nome.replace(/'/g, "\\'")}')">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd" /></svg>
+                            </button>
                         </div>
                     </div>
                 `;
-                catalogoContainer.appendChild(roupaCard);
+                catalogoContainer.appendChild(card);
             });
         }
 
@@ -513,160 +491,27 @@
             paginationControls.innerHTML = '';
             if (totalPages <= 1) return;
 
-            const createButton = (text, page, isDisabled) => {
+            const createButton = (text, page, isActive = false) => {
                 const button = document.createElement('button');
-                button.textContent = text;
-                button.className = `px-4 py-2 rounded-md text-sm font-medium ${isDisabled ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200'}`;
-                button.disabled = isDisabled;
-                button.addEventListener('click', () => {
-                    currentPage = page;
-                    applyFiltersAndRender();
-                    document.querySelector('section').scrollIntoView({ behavior: 'smooth' });
-                });
+                button.innerHTML = text;
+                button.className = `px-4 py-2 rounded-md text-sm font-medium ${isActive ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`;
+                if (page) button.onclick = () => renderPage(page);
+                else button.disabled = true;
                 return button;
             };
 
-            paginationControls.appendChild(createButton('Anterior', currentPage - 1, currentPage === 1));
-
-            const pageInfo = document.createElement('span');
-            pageInfo.textContent = `Página ${currentPage} de ${totalPages}`;
-            pageInfo.className = 'mx-4 text-gray-700 font-medium text-sm';
-            paginationControls.appendChild(pageInfo);
-
-            paginationControls.appendChild(createButton('Próximo', currentPage + 1, currentPage === totalPages));
-        }
-
-        function applyFiltersAndRender() {
-            let filtered = [...allProducts];
-
-            // 1. Filter by search term
-            if (searchTerm) {
-                filtered = filtered.filter(p => p.nome.toLowerCase().includes(searchTerm));
-            }
-            // 2. Filter by brand
-            if (selectedMarcas.size > 0) {
-                filtered = filtered.filter(p => selectedMarcas.has(p.marca));
-            }
-            // 3. Filter by model
-            if (selectedModelos.size > 0) {
-                filtered = filtered.filter(p => selectedModelos.has(p.modelo));
-            }
-            // 4. Filter by size
-            if (selectedTamanhos.size > 0) {
-                filtered = filtered.filter(p => p.tamanhos && p.tamanhos.some(t => selectedTamanhos.has(t)));
-            }
-            // 5. Filter by promotion
-            if (selectedPromocao === 'sim') {
-                filtered = filtered.filter(p => p.emPromocao);
-            } else if (selectedPromocao === 'nao') {
-                filtered = filtered.filter(p => !p.emPromocao);
-            }
-
-            const totalItems = filtered.length;
-            const totalPages = Math.ceil(totalItems / itemsPerPage);
-            if (currentPage > totalPages) currentPage = totalPages || 1;
-
-            const startIndex = (currentPage - 1) * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
-            const paginatedProducts = filtered.slice(startIndex, endIndex);
-
-            renderCatalogo(paginatedProducts);
-            renderPaginationControls(totalItems, totalPages);
-        }
-
-        function createFilterCheckbox(container, value, type, stateSet) {
-            const id = `${type}-${value.replace(/\s+/g, '-')}`;
-            const wrapper = document.createElement('div');
-            wrapper.className = 'flex items-center';
-            wrapper.innerHTML = `
-                <input id="${id}" name="${type}" type="checkbox" value="${value}" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                <label for="${id}" class="ml-3 text-sm text-gray-600">${value}</label>
-            `;
-            container.appendChild(wrapper);
-            wrapper.querySelector('input').addEventListener('change', (e) => {
-                if (e.target.checked) {
-                    stateSet.add(value);
-                } else {
-                    stateSet.delete(value);
+            paginationControls.appendChild(createButton('&laquo;', currentPage > 1 ? currentPage - 1 : null));
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    paginationControls.appendChild(createButton(i, i, true));
+                } else if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                     paginationControls.appendChild(createButton(i, i));
+                } else if (i === currentPage - 2 || i === currentPage + 2) {
+                    paginationControls.appendChild(createButton('...', null));
                 }
-                currentPage = 1;
-                applyFiltersAndRender();
-            });
-        }
-
-        function populateFilters() {
-            const uniqueMarcas = new Set();
-            const uniqueModelos = new Set();
-            const uniqueTamanhos = new Set();
-            allProducts.forEach(p => {
-                if (p.marca) uniqueMarcas.add(p.marca);
-                if (p.modelo) uniqueModelos.add(p.modelo);
-                if (p.tamanhos) p.tamanhos.forEach(t => uniqueTamanhos.add(t));
-            });
-
-            filterMarcaContainer.innerHTML = '';
-            Array.from(uniqueMarcas).sort().forEach(marca => createFilterCheckbox(filterMarcaContainer, marca, 'marca', selectedMarcas));
-            
-            filterModeloContainer.innerHTML = '';
-            Array.from(uniqueModelos).sort().forEach(modelo => createFilterCheckbox(filterModeloContainer, modelo, 'modelo', selectedModelos));
-
-            filterTamanhoContainer.innerHTML = '';
-            Array.from(uniqueTamanhos).sort().forEach(tamanho => createFilterCheckbox(filterTamanhoContainer, tamanho, 'tamanho', selectedTamanhos));
-        }
-        
-        // --- Event Listeners for Filters ---
-        searchInput.addEventListener('input', (e) => {
-            searchTerm = e.target.value.toLowerCase();
-            currentPage = 1;
-            applyFiltersAndRender();
-        });
-
-        filterPromocaoContainer.addEventListener('change', (e) => {
-            if (e.target.name === 'promocao') {
-                selectedPromocao = e.target.value;
-                currentPage = 1;
-                applyFiltersAndRender();
             }
-        });
-        
-        clearFiltersButton.addEventListener('click', () => {
-            searchInput.value = '';
-            searchTerm = '';
-            
-            selectedMarcas.clear();
-            document.querySelectorAll('#filterMarca input').forEach(c => c.checked = false);
-            
-            selectedModelos.clear();
-            document.querySelectorAll('#filterModelo input').forEach(c => c.checked = false);
-            
-            selectedTamanhos.clear();
-            document.querySelectorAll('#filterTamanho input').forEach(c => c.checked = false);
-            
-            selectedPromocao = 'todos';
-            document.querySelector('#filterPromocao input[value="todos"]').checked = true;
-            
-            currentPage = 1;
-            applyFiltersAndRender();
-        });
-
-        // --- Carregamento Inicial dos Dados ---
-        database.ref('roupas').on('value', (snapshot) => {
-            loadingMessage.style.display = 'none';
-            const roupas = snapshot.val();
-            allProducts = [];
-
-            if (roupas) {
-                allProducts = Object.keys(roupas).map(key => ({ id: key, ...roupas[key] })).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-            }
-            
-            populateFilters();
-            applyFiltersAndRender();
-
-        }, (error) => {
-            console.error("Erro ao carregar produtos:", error);
-            loadingMessage.textContent = 'Falha ao carregar produtos. Tente novamente mais tarde.';
-            noProductsMessage.style.display = 'none';
-        });
+            paginationControls.appendChild(createButton('&raquo;', currentPage < totalPages ? currentPage + 1 : null));
+        }
     </script>
 </body>
 </html>

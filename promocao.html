@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Outlet - BBZ IMPORTS</title>
     <link rel="icon" href="./imgs/icon.png" type="image/png">
+    <!-- Header -->
+    <script src="Header.js" defer></script>
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -50,45 +52,6 @@
 </head>
 
 <body class="antialiased flex flex-col min-h-screen">
-
-    <!-- Header -->
-    <header id="header" class="bg-white/80 backdrop-blur-lg fixed top-0 left-0 right-0 z-40 shadow-sm">
-        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <div class="flex-shrink-0">
-                    <a href="index.html" class="text-3xl font-black tracking-tighter text-gray-900">BBZ</a>
-                </div>
-                <div class="hidden lg:flex lg:items-center lg:space-x-8">
-                    <a href="index.html#products-container" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Roupas</a>
-                    <a href="promocao.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Promoções</a>
-                    <a href="bbz_sports.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">BBZ Sports</a>
-                    <a href="contato.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Contato</a>
-                    <a href="quem_somos.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Quem Somos</a>
-                    <a href="marcas.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Marcas</a>
-                    <a href="login.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Admin</a>
-                </div>
-                <div class="flex items-center lg:hidden">
-                    <button id="mobile-menu-button" class="p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-gray-500">
-                        <span class="sr-only">Abrir menu</span>
-                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </nav>
-        <div id="mobile-menu" class="lg:hidden hidden">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white/95 backdrop-blur-lg rounded-b-lg shadow-lg">
-                <a href="index.html#products-container" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Roupas</a>
-                <a href="promocao.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Promoções</a>
-                <a href="bbz_sports.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">BBZ Sports</a>
-                <a href="contato.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Contato</a>
-                <a href="quem_somos.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Quem Somos</a>
-                <a href="marcas.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Marcas</a>
-                <a href="login.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Admin</a>
-            </div>
-        </div>
-    </header>
 
     <!-- Main Content -->
     <main class="flex-grow">

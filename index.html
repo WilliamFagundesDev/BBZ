@@ -13,6 +13,9 @@
     <!-- Swiper.js CSS -->
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 
+    <!-- Header -->
+    <script src="Header.js" defer></script>
+
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -80,45 +83,6 @@
 </head>
 
 <body class="antialiased">
-    <!-- Header -->
-    <header id="header" class="bg-white/80 backdrop-blur-lg fixed top-0 left-0 right-0 z-40 shadow-sm">
-        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <div class="flex-shrink-0">
-                    <a href="index.html" class="text-3xl font-black tracking-tighter text-gray-900">BBZ</a>
-                </div>
-                <div class="hidden lg:flex lg:items-center lg:space-x-8">
-                    <a href="index.html#products-container" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Roupas</a>
-                    <a href="promocao.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Promoções</a>
-                    <a href="bbz_sports.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">BBZ Sports</a>
-                    <a href="contato.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Contato</a>
-                    <a href="quem_somos.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Quem Somos</a>
-                    <a href="marcas.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Marcas</a>
-                    <a href="login.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Admin</a>
-                </div>
-                <div class="flex items-center lg:hidden">
-                    <button id="mobile-menu-button" class="p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-gray-500">
-                        <span class="sr-only">Abrir menu</span>
-                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </nav>
-        <div id="mobile-menu" class="lg:hidden hidden">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white/95 backdrop-blur-lg rounded-b-lg shadow-lg">
-                <a href="index.html#products-container" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Roupas</a>
-                <a href="promocao.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Promoções</a>
-                <a href="bbz_sports.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">BBZ Sports</a>
-                <a href="contato.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Contato</a>
-                <a href="quem_somos.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Quem Somos</a>
-                <a href="marcas.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Marcas</a>
-                <a href="login.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Admin</a>
-            </div>
-        </div>
-    </header>
-
 
     <!-- Main Content -->
     <main>
@@ -244,6 +208,7 @@
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
     <!-- Swiper.js JS -->
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
@@ -253,7 +218,7 @@
             spaceBetween: 0,
             centeredSlides: true,
             autoplay: {
-                delay: 5000, // Tempo em ms (5 segundos)
+                delay: 5000,
                 disableOnInteraction: false,
             },
             pagination: {
@@ -284,6 +249,55 @@
         };
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
+        const auth = firebase.auth();
+
+        // --- Auth State Change Handler ---
+        const navDefault = document.getElementById('nav-default');
+        const navLoggedIn = document.getElementById('nav-logged-in');
+        const mobileNavDefault = document.getElementById('mobile-nav-default');
+        const mobileNavLoggedIn = document.getElementById('mobile-nav-logged-in');
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // User is signed in
+                navDefault.classList.add('hidden');
+                navLoggedIn.classList.remove('hidden');
+                mobileNavDefault.classList.add('hidden');
+                mobileNavLoggedIn.classList.remove('hidden');
+
+                const userEmail = user.email.length > 20 ? user.email.substring(0, 17) + '...' : user.email;
+
+                // Desktop Nav
+                navLoggedIn.innerHTML = `
+                    <span class="text-gray-700 font-semibold" title="${user.email}">Bem vindo, ${userEmail}</span>
+                    <button id="logoutBtnDesktop" class="bg-red-500 text-white px-3 py-1.5 rounded-md hover:bg-red-600 font-semibold text-sm">Sair</button>
+                `;
+
+                // Mobile Nav
+                mobileNavLoggedIn.innerHTML = `
+                    <span class="text-gray-700 block px-3 py-2 text-base font-medium" title="${user.email}">Bem vindo, ${user.email}</span>
+                    <a href="index.html#products-container" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Roupas</a>
+                    <a href="promocao.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Promoções</a>
+                    <a href="bbz_sports.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">BBZ Sports</a>
+                    <a href="contato.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Contato</a>
+                    <a href="quem_somos.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Quem Somos</a>
+                    <a href="marcas.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Marcas</a>
+                    <button id="logoutBtnMobile" class="w-full text-left text-red-600 hover:text-red-800 block px-3 py-2 rounded-md text-base font-medium">Sair</button>
+                `;
+                
+                // Add logout functionality
+                document.getElementById('logoutBtnDesktop').addEventListener('click', () => auth.signOut());
+                document.getElementById('logoutBtnMobile').addEventListener('click', () => auth.signOut());
+
+            } else {
+                // User is signed out
+                navDefault.classList.remove('hidden');
+                navLoggedIn.classList.add('hidden');
+                mobileNavDefault.classList.remove('hidden');
+                mobileNavLoggedIn.classList.add('hidden');
+            }
+        });
+
 
         // --- DOM Elements ---
         const productsContainer = document.getElementById('products-container');
@@ -366,15 +380,12 @@
         // --- Filtering Logic ---
         function applyFilters() {
             let filtered = [...allProducts];
-            // Filtra por marcas selecionadas
             if (selectedMarcas.size > 0) {
                 filtered = filtered.filter(p => selectedMarcas.has(p.marca));
             }
-            // Filtra por modelos selecionados
             if (selectedModelos.size > 0) {
                 filtered = filtered.filter(p => selectedModelos.has(p.modelo));
             }
-            // Exclui camisas de time E produtos em promoção da página principal
             filtered = filtered.filter(p => p.modelo !== 'Camisa de time' && !p.emPromocao);
             
             const totalItems = filtered.length;
@@ -419,7 +430,6 @@
             const uniqueMarcas = new Set();
             const uniqueModelos = new Set();
             allProducts.forEach(p => {
-                // Popula filtros apenas com produtos que não são de time e não estão em promoção
                 if (!p.emPromocao && p.modelo !== 'Camisa de time') {
                     if (p.marca) uniqueMarcas.add(p.marca);
                     if (p.modelo) uniqueModelos.add(p.modelo);

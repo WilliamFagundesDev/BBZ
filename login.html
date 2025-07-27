@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BBZ IMPORTS - Login Administrativo</title>
+    <title>BBZ IMPORTS - Login e Cadastro</title>
     <link rel="icon" href="./imgs/icon.png" type="image/png">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,9 +17,7 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: #F5F5F7;
-            /* Light gray background */
             color: #1D1D1F;
-            /* Near-black for text */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -32,7 +30,6 @@
             left: 50%;
             transform: translateX(-50%);
             background-color: #4CAF50;
-            /* Green for success */
             color: white;
             padding: 15px 30px;
             border-radius: 8px;
@@ -45,7 +42,6 @@
 
         .message-box.error {
             background-color: #f44336;
-            /* Red for error */
         }
 
         .message-box.show {
@@ -65,13 +61,13 @@
         }
 
         @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
-            100% {
-                transform: rotate(360deg);
-            }
+        .tab-button.active {
+            border-color: #1D1D1F;
+            color: #1D1D1F;
         }
     </style>
 </head>
@@ -81,23 +77,63 @@
     <div id="messageBox" class="message-box"></div>
 
     <div class="max-w-md w-full bg-white rounded-xl shadow-lg p-8 sm:p-10 md:p-12">
-        <h1 class="text-3xl sm:text-4xl font-bold text-center mb-8 text-gray-900">Login Administrativo BBZ</h1>
+        <a href="index.html" class="text-3xl font-black tracking-tighter text-gray-900 text-center block mb-4">BBZ IMPORTS</a>
+        
+        <!-- Tabs -->
+        <div class="flex border-b mb-6">
+            <button id="showLoginBtn" class="tab-button active flex-1 py-2 font-semibold text-gray-800 border-b-2 transition">Entrar</button>
+            <button id="showRegisterBtn" class="tab-button flex-1 py-2 font-semibold text-gray-500 border-b-2 border-transparent transition">Criar Conta</button>
+        </div>
 
+        <!-- Login Form -->
         <form id="loginForm" class="space-y-6">
             <div>
-                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email:</label>
-                <input type="email" id="email" name="email" required
+                <label for="loginEmail" class="block text-sm font-medium text-gray-700 mb-1">Email:</label>
+                <input type="email" id="loginEmail" name="email" required
                     class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-gray-800 focus:border-gray-800 sm:text-base">
             </div>
             <div>
-                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Senha:</label>
-                <input type="password" id="password" name="password" required
+                <label for="loginPassword" class="block text-sm font-medium text-gray-700 mb-1">Senha:</label>
+                <input type="password" id="loginPassword" name="password" required
                     class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-gray-800 focus:border-gray-800 sm:text-base">
             </div>
             <button type="submit" id="loginButton"
                 class="w-full px-6 py-3 bg-gray-900 text-white font-semibold rounded-md shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 transition duration-150 ease-in-out flex items-center justify-center">
-                <span id="buttonText">Entrar</span>
-                <div id="loadingSpinner" class="loading-spinner hidden"></div>
+                <span id="loginButtonText">Entrar</span>
+                <div id="loginLoadingSpinner" class="loading-spinner hidden"></div>
+            </button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="registerForm" class="space-y-4 hidden">
+            <div>
+                <label for="registerNome" class="block text-sm font-medium text-gray-700 mb-1">Nome:</label>
+                <input type="text" id="registerNome" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-gray-800 focus:border-gray-800 sm:text-base">
+            </div>
+             <div>
+                <label for="registerSobrenome" class="block text-sm font-medium text-gray-700 mb-1">Sobrenome:</label>
+                <input type="text" id="registerSobrenome" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-gray-800 focus:border-gray-800 sm:text-base">
+            </div>
+            <div>
+                <label for="registerTelefone" class="block text-sm font-medium text-gray-700 mb-1">Telefone:</label>
+                <input type="tel" id="registerTelefone" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-gray-800 focus:border-gray-800 sm:text-base">
+            </div>
+            <div>
+                <label for="registerEmail" class="block text-sm font-medium text-gray-700 mb-1">Email:</label>
+                <input type="email" id="registerEmail" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-gray-800 focus:border-gray-800 sm:text-base">
+            </div>
+            <div>
+                <label for="registerPassword" class="block text-sm font-medium text-gray-700 mb-1">Senha:</label>
+                <input type="password" id="registerPassword" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-gray-800 focus:border-gray-800 sm:text-base">
+            </div>
+            <div>
+                <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1">Confirmar Senha:</label>
+                <input type="password" id="confirmPassword" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-gray-800 focus:border-gray-800 sm:text-base">
+            </div>
+            <button type="submit" id="registerButton"
+                class="w-full px-6 py-3 bg-gray-900 text-white font-semibold rounded-md shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 transition duration-150 ease-in-out flex items-center justify-center">
+                <span id="registerButtonText">Cadastrar</span>
+                <div id="registerLoadingSpinner" class="loading-spinner hidden"></div>
             </button>
         </form>
     </div>
@@ -105,9 +141,10 @@
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
     <script>
-        // Firebase Configuration (from your existing files)
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBk1cV2SQEhEToTdDxqDBTYOHjyogHaOAE",
             authDomain: "bbz-imports.firebaseapp.com",
@@ -122,72 +159,156 @@
         // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
+        const database = firebase.database();
 
         // DOM Elements
         const loginForm = document.getElementById('loginForm');
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
-        const loginButton = document.getElementById('loginButton');
-        const buttonText = document.getElementById('buttonText');
-        const loadingSpinner = document.getElementById('loadingSpinner');
+        const registerForm = document.getElementById('registerForm');
+        const showLoginBtn = document.getElementById('showLoginBtn');
+        const showRegisterBtn = document.getElementById('showRegisterBtn');
         const messageBox = document.getElementById('messageBox');
 
+        // Loading states
+        const loginButton = document.getElementById('loginButton');
+        const loginButtonText = document.getElementById('loginButtonText');
+        const loginLoadingSpinner = document.getElementById('loginLoadingSpinner');
+        const registerButton = document.getElementById('registerButton');
+        const registerButtonText = document.getElementById('registerButtonText');
+        const registerLoadingSpinner = document.getElementById('registerLoadingSpinner');
+
+        // Tab switching logic
+        showLoginBtn.addEventListener('click', () => {
+            loginForm.classList.remove('hidden');
+            registerForm.classList.add('hidden');
+            showLoginBtn.classList.add('active');
+            showRegisterBtn.classList.remove('active');
+        });
+
+        showRegisterBtn.addEventListener('click', () => {
+            loginForm.classList.add('hidden');
+            registerForm.classList.remove('hidden');
+            showRegisterBtn.classList.add('active');
+            showLoginBtn.classList.remove('active');
+        });
+
+
         /**
-         * Displays a message on the screen (replaces alert()).
+         * Displays a message on the screen.
          * @param {string} message - The message to be displayed.
-         * @param {boolean} isError - If the message is an error (true) or success (false).
+         * @param {boolean} isError - If the message is an error.
          */
         function showMessage(message, isError = false) {
             messageBox.textContent = message;
-            messageBox.classList.remove('error');
-            if (isError) {
-                messageBox.classList.add('error');
-            }
+            messageBox.classList.toggle('error', isError);
             messageBox.classList.add('show');
             setTimeout(() => {
                 messageBox.classList.remove('show');
-            }, 3000); // Message disappears after 3 seconds
+            }, 3000);
         }
 
         /**
-         * Enables/disables the submit button and shows/hides the spinner.
-         * @param {boolean} isLoading - If it's loading (true) or not (false).
+         * Sets loading state for a button.
+         * @param {boolean} isLoading - If it's loading.
+         * @param {string} type - 'login' or 'register'.
          */
-        function setLoadingState(isLoading) {
-            loginButton.disabled = isLoading;
-            if (isLoading) {
-                buttonText.textContent = 'Entrando...';
-                loadingSpinner.classList.remove('hidden');
+        function setLoadingState(isLoading, type) {
+            const button = type === 'login' ? loginButton : registerButton;
+            const buttonText = type === 'login' ? loginButtonText : registerButtonText;
+            const spinner = type === 'login' ? loginLoadingSpinner : registerLoadingSpinner;
+            const defaultText = type === 'login' ? 'Entrar' : 'Cadastrar';
+
+            button.disabled = isLoading;
+            spinner.classList.toggle('hidden', !isLoading);
+            buttonText.textContent = isLoading ? 'Aguarde...' : defaultText;
+        }
+
+        /**
+         * Redirects user based on email.
+         * @param {object} user - The Firebase user object.
+         */
+        function handleRedirect(user) {
+            if (user.email === 'bbzimports@gmail.com') {
+                window.location.href = 'cadastrobbz.html';
             } else {
-                buttonText.textContent = 'Entrar';
-                loadingSpinner.classList.add('hidden');
+                window.location.href = 'index.html';
             }
         }
 
         // Handle login form submission
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            setLoadingState(true);
-
-            const email = emailInput.value;
-            const password = passwordInput.value;
+            setLoadingState(true, 'login');
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
 
             try {
-                await auth.signInWithEmailAndPassword(email, password);
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
                 showMessage('Login bem-sucedido! Redirecionando...');
-                // Redirect to the admin page after successful login
-                window.location.href = 'cadastrobbz.html';
+                handleRedirect(userCredential.user);
             } catch (error) {
                 console.error("Login error:", error);
                 let errorMessage = 'Erro de login. Verifique suas credenciais.';
-                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
                     errorMessage = 'Email ou senha inválidos.';
                 } else if (error.code === 'auth/invalid-email') {
                     errorMessage = 'Formato de email inválido.';
                 }
                 showMessage(errorMessage, true);
             } finally {
-                setLoadingState(false);
+                setLoadingState(false, 'login');
+            }
+        });
+
+        // Handle register form submission
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            setLoadingState(true, 'register');
+
+            const nome = document.getElementById('registerNome').value;
+            const sobrenome = document.getElementById('registerSobrenome').value;
+            const telefone = document.getElementById('registerTelefone').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                showMessage('As senhas não coincidem.', true);
+                setLoadingState(false, 'register');
+                return;
+            }
+
+            try {
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+                
+                // Cria uma chave segura para o Realtime Database a partir do e-mail
+                const safeEmailKey = email.replace(/\./g, '_');
+
+                // Salva informações adicionais do usuário no nó 'clientes'
+                await database.ref('clientes/' + safeEmailKey).set({
+                    nome: nome,
+                    sobrenome: sobrenome,
+                    telefone: telefone,
+                    email: email,
+                    uid: user.uid // Armazena o UID para referência futura, se necessário
+                });
+
+                showMessage('Cadastro realizado com sucesso! Redirecionando...');
+                handleRedirect(user);
+
+            } catch (error) {
+                console.error("Registration error:", error);
+                let errorMessage = 'Erro ao cadastrar. Tente novamente.';
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = 'Este email já está em uso.';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Formato de email inválido.';
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = 'A senha deve ter pelo menos 6 caracteres.';
+                }
+                showMessage(errorMessage, true);
+            } finally {
+                setLoadingState(false, 'register');
             }
         });
     </script>

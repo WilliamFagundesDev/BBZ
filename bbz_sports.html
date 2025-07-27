@@ -81,15 +81,23 @@
                     <a href="index.html" class="text-3xl font-black tracking-tighter text-gray-900">BBZ</a>
                     <a href="index.html" class="text-3x2 font-black tracking-tighter text-gray-900">Sports</a>
                 </div>
-                <div class="hidden lg:flex lg:items-center lg:space-x-8">
+                
+                <!-- Default Nav (Not logged in) -->
+                <div id="nav-default" class="hidden lg:flex lg:items-center lg:space-x-8">
                     <a href="index.html#products-container" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Roupas</a>
                     <a href="promocao.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Promoções</a>
                     <a href="bbz_sports.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">BBZ Sports</a>
                     <a href="contato.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Contato</a>
                     <a href="quem_somos.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Quem Somos</a>
                     <a href="marcas.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Marcas</a>
-                    <a href="login.html" class="text-gray-700 hover:text-gray-900 font-semibold tracking-wide">Admin</a>
+                    <a href="login.html" class="bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-700 font-semibold tracking-wide">Login</a>
                 </div>
+
+                <!-- Logged In Nav -->
+                <div id="nav-logged-in" class="hidden lg:flex lg:items-center lg:space-x-4">
+                    <!-- Content will be injected by JS -->
+                </div>
+
                 <div class="flex items-center lg:hidden">
                     <button id="mobile-menu-button" class="p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-gray-500">
                         <span class="sr-only">Abrir menu</span>
@@ -101,14 +109,19 @@
             </div>
         </nav>
         <div id="mobile-menu" class="lg:hidden hidden">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white/90 backdrop-blur-lg rounded-b-lg shadow-lg">
+             <!-- Mobile Default Nav -->
+            <div id="mobile-nav-default" class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white/90 backdrop-blur-lg rounded-b-lg shadow-lg">
                 <a href="index.html#products-container" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Roupas</a>
                 <a href="promocao.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Promoções</a>
                 <a href="bbz_sports.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">BBZ Sports</a>
                 <a href="contato.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Contato</a>
                 <a href="quem_somos.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Quem Somos</a>
                 <a href="marcas.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Marcas</a>
-                <a href="login.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Admin</a>
+                <a href="login.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Login</a>
+            </div>
+             <!-- Mobile Logged In Nav -->
+            <div id="mobile-nav-logged-in" class="hidden px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white/95 backdrop-blur-lg rounded-b-lg shadow-lg">
+                 <!-- Content will be injected by JS -->
             </div>
         </div>
     </header>
@@ -153,6 +166,8 @@
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
 
     <script>
         // --- Firebase Configuration ---
@@ -168,6 +183,54 @@
         };
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
+        const auth = firebase.auth();
+
+        // --- Auth State Change Handler ---
+        const navDefault = document.getElementById('nav-default');
+        const navLoggedIn = document.getElementById('nav-logged-in');
+        const mobileNavDefault = document.getElementById('mobile-nav-default');
+        const mobileNavLoggedIn = document.getElementById('mobile-nav-logged-in');
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // User is signed in
+                navDefault.classList.add('hidden');
+                navLoggedIn.classList.remove('hidden');
+                mobileNavDefault.classList.add('hidden');
+                mobileNavLoggedIn.classList.remove('hidden');
+
+                const userEmail = user.email.length > 20 ? user.email.substring(0, 17) + '...' : user.email;
+
+                // Desktop Nav
+                navLoggedIn.innerHTML = `
+                    <span class="text-gray-700 font-semibold" title="${user.email}">Bem vindo, ${userEmail}</span>
+                    <button id="logoutBtnDesktop" class="bg-red-500 text-white px-3 py-1.5 rounded-md hover:bg-red-600 font-semibold text-sm">Sair</button>
+                `;
+
+                // Mobile Nav
+                mobileNavLoggedIn.innerHTML = `
+                    <span class="text-gray-700 block px-3 py-2 text-base font-medium" title="${user.email}">Bem vindo, ${user.email}</span>
+                    <a href="index.html#products-container" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Roupas</a>
+                    <a href="promocao.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Promoções</a>
+                    <a href="bbz_sports.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">BBZ Sports</a>
+                    <a href="contato.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Contato</a>
+                    <a href="quem_somos.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Quem Somos</a>
+                    <a href="marcas.html" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Marcas</a>
+                    <button id="logoutBtnMobile" class="w-full text-left text-red-600 hover:text-red-800 block px-3 py-2 rounded-md text-base font-medium">Sair</button>
+                `;
+                
+                // Add logout functionality
+                document.getElementById('logoutBtnDesktop').addEventListener('click', () => auth.signOut());
+                document.getElementById('logoutBtnMobile').addEventListener('click', () => auth.signOut());
+
+            } else {
+                // User is signed out
+                navDefault.classList.remove('hidden');
+                navLoggedIn.classList.add('hidden');
+                mobileNavDefault.classList.remove('hidden');
+                mobileNavLoggedIn.classList.add('hidden');
+            }
+        });
 
         // --- DOM Elements ---
         const productsContainer = document.getElementById('products-container');
@@ -253,21 +316,18 @@
             const teams = new Map();
             products.forEach(p => {
                 if (p.time && !teams.has(p.time)) {
-                    // Usando a primeira imagem do produto como logo do time
                     teams.set(p.time, p.imageUrl1 || `https://placehold.co/80x80/eee/333?text=${p.time.substring(0,3)}`);
                 }
             });
 
-            teamFiltersContainer.innerHTML = ''; // Limpa filtros existentes
+            teamFiltersContainer.innerHTML = ''; 
 
-            // Botão "Todos"
             const allButton = document.createElement('button');
             allButton.className = 'team-filter-button active flex-shrink-0 flex items-center justify-center w-20 h-20 bg-white rounded-full shadow-md font-bold text-lg';
             allButton.textContent = 'Todos';
             allButton.dataset.team = 'All';
             teamFiltersContainer.appendChild(allButton);
 
-            // Botões de times
             teams.forEach((logoUrl, teamName) => {
                 const teamButton = document.createElement('button');
                 teamButton.className = 'team-filter-button flex-shrink-0 w-20 h-20 bg-white rounded-full shadow-md overflow-hidden';
@@ -276,18 +336,15 @@
                 teamFiltersContainer.appendChild(teamButton);
             });
 
-            // Adiciona event listener para a delegação de eventos
             teamFiltersContainer.addEventListener('click', (e) => {
                 const button = e.target.closest('.team-filter-button');
                 if (!button) return;
 
-                // Atualiza estado do botão ativo
                 teamFiltersContainer.querySelector('.active').classList.remove('active');
                 button.classList.add('active');
 
-                // Filtra produtos
                 selectedTeam = button.dataset.team;
-                currentPage = 1; // Reseta a página ao mudar o filtro
+                currentPage = 1; 
                 filterAndPaginate();
             });
         }
